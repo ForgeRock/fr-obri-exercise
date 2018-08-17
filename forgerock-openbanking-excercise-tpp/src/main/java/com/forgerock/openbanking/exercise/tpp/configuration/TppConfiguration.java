@@ -31,24 +31,6 @@ import java.io.InputStreamReader;
 public class TppConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(TppConfiguration.class);
 
-    @Value("${tpp.certificate.transport.alias}")
-    private String tppTransportCertificateAlias;
-
-    @Value("${tpp.certificate.signature.alias}")
-    private String tppSignatureCertificateAlias;
-
-    @Value("${tpp.certificate.signature.algorithm}")
-    private String tppSignatureCertificateAlgorithm;
-
-    @Value("${tpp.certificate.signature.kid}")
-    private String tppSignatureCertificateKid;
-
-    @Value("${tpp.certificate.signature.password}")
-    private String tppSignatureCertificatePassword;
-
-    @Value("${tpp.software-id}")
-    private String softwareId;
-
     @Value("${tpp.aisp.redirect_uri}")
     public String aispRedirectUri;
 
@@ -58,14 +40,12 @@ public class TppConfiguration {
     @Value("${tpp.openbanking.version}")
     public String version;
 
-    @Value("${tpp.ssa}")
-    private Resource ssa;
+    @Value("${tpp.jwkms}")
+    private String jwkms;
+    @Value("${tpp.directory}")
+    private String directory;
 
     private String ssaContent = null;
-
-    public String getSoftwareId() {
-        return softwareId;
-    }
 
     public String getAispRedirectUri() {
         return aispRedirectUri;
@@ -79,62 +59,11 @@ public class TppConfiguration {
         return version;
     }
 
-    public String getTppSignatureCertificatePassword() {
-        return tppSignatureCertificatePassword;
+    public String getJwkms() {
+        return jwkms;
     }
 
-    public String getTppTransportCertificateAlias() {
-        return tppTransportCertificateAlias;
-    }
-
-    public String getTppSignatureCertificateAlias() {
-        return tppSignatureCertificateAlias;
-    }
-
-    public String getTppSignatureCertificateAlgorithm() {
-        return tppSignatureCertificateAlgorithm;
-    }
-
-    public String getTppSignatureCertificateKid() {
-        return tppSignatureCertificateKid;
-    }
-
-    public String getSsa() {
-        if (ssaContent == null) {
-            StringBuilder result = new StringBuilder();
-
-            InputStream is = null;
-            BufferedReader br = null;
-            try {
-                is = ssa.getInputStream();
-                br = new BufferedReader(new InputStreamReader(is));
-
-                String line;
-                while ((line = br.readLine()) != null) {
-                    result.append(line);
-                }
-            } catch (IOException e) {
-                LOGGER.error("Can't read SSA resource", e);
-                throw new RuntimeException(e);
-            } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                        LOGGER.error("Can't close inputStream correctly", e);
-                    }
-                }
-                if (br != null) {
-                    try {
-                        br.close();
-                    } catch (IOException e) {
-                        LOGGER.error("Can't close BufferedReader correctly", e);
-                    }
-                }
-            }
-
-            ssaContent = result.toString();
-        }
-        return ssaContent;
+    public String getDirectory() {
+        return directory;
     }
 }

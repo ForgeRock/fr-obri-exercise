@@ -49,9 +49,13 @@ public class ASPSPASRegistrationService {
         return restTemplate.postForObject(registrationEndpoint, request, OIDCRegistrationResponse.class);
     }
 
-    public void unregister(AspspConfiguration aspspConfiguration) throws HttpClientErrorException {
+    public void unregister(String registrationEndpoint) throws HttpClientErrorException {
         LOGGER.info("Unregister the TPP to the ASPSP-AS");
-        restTemplate.delete(aspspConfiguration.getRegistrationEndpoint());
-        aspspConfigurationRepository.delete(aspspConfiguration);
+        restTemplate.delete(registrationEndpoint);
+    }
+
+    public OIDCRegistrationResponse getRegistration(String registrationEndpoint) throws HttpClientErrorException {
+        LOGGER.info("Unregister the TPP to the ASPSP-AS");
+        return restTemplate.getForEntity(registrationEndpoint, OIDCRegistrationResponse.class).getBody();
     }
 }

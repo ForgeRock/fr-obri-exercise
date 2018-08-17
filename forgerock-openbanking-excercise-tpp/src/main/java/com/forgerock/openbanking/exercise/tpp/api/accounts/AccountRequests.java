@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Api(value = "account request", description = "Account requests API")
-@RequestMapping("/accountrequests/")
+@RequestMapping("/api/open-banking/account-requests/")
 public interface AccountRequests {
 
     @ApiOperation(value = "Initiate an account request",
@@ -40,7 +40,7 @@ public interface AccountRequests {
             @ApiResponse(code = 406, message = "Not Acceptable", response = Void.class),
             @ApiResponse(code = 429, message = "Too Many Requests", response = Void.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Void.class) })
-    @RequestMapping(value = "initiateAccountRequest", method = RequestMethod.POST)
+    @RequestMapping(value = "initiate", method = RequestMethod.POST)
     ResponseEntity<String> initiateAccountRequest(
             @ApiParam(value = "The ASPSP ID", required = true)
             @RequestParam(value = "aspspId") String aspspId

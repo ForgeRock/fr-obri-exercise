@@ -14,7 +14,7 @@
  *  Copyright 2018 ForgeRock AS.
  *
  */
-package com.forgerock.openbanking.exercise.tpp.api.hello;
+package com.forgerock.openbanking.exercise.tpp.api.matls;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,16 +24,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@Api(value = "hello world", description = "test the installation of the app by doing an hello world!")
-@RequestMapping("/api/hello-world")
-public interface HelloWorld {
+@Api(value = "Test your matls setup", description = "test the installation of transport certificate in your application")
+@RequestMapping("/api/test/matls")
+public interface TestMatls {
 
-    @ApiOperation(value = "Say hello to the application",
-            notes = "test the installation of the app by doing an hello world!", response = ResponseEntity.class)
+    @ApiOperation(value = "Call the jwkms matls test endpoint", response = ResponseEntity.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "return 'Hello World!'", response = String.class)
+            @ApiResponse(code = 200, message = "return the jwkms response", response = String.class)
         })
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    ResponseEntity<String> helloWorld();
+    @RequestMapping(value = "/jwkms", method = RequestMethod.GET)
+    ResponseEntity<String> testMatlsForJwkMs();
+
+    @ApiOperation(value = "Call the directory matls test endpoint", response = ResponseEntity.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "return the directory response", response = String.class)
+    })
+    @RequestMapping(value = "/directory", method = RequestMethod.GET)
+    ResponseEntity<String> testMatlsForDirectory();
 
 }

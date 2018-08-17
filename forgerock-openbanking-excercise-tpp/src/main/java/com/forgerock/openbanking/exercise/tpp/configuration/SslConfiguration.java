@@ -46,13 +46,9 @@ public class SslConfiguration {
     private Resource keyStore;
     @Value("${server.ssl.key-store-password}")
     private String keyStorePassword;
-    @Value("${server.ssl.ob-trust-store}")
-    private Resource trustStore;
-    @Value("${server.ssl.ob-trust-store-password}")
-    private String trustStorePassword;
     @Value("${server.ssl.key-password}")
     private String keyPassword;
-    @Value("${tpp.certificate.transport.alias}")
+    @Value("${server.ssl.key-alias}")
     private String keyAlias;
 
     @Bean
@@ -74,11 +70,6 @@ public class SslConfiguration {
                             (aliases, socket) -> keyAlias
                     );
 
-            if (useLocalTruststore) {
-                sslContextBuilder.loadTrustMaterial(
-                        getStore(trustStore.getURL(), trustStorePassword.toCharArray()),
-                        null);
-            }
             SSLContext sslContext = sslContextBuilder.build();
             SSLConnectionSocketFactory socketFactory;
             socketFactory = new SSLConnectionSocketFactory(sslContext);

@@ -22,9 +22,11 @@ import com.forgerock.openbanking.exercise.tpp.model.as.discovery.OIDCDiscoveryRe
 import com.forgerock.openbanking.exercise.tpp.model.as.registration.OIDCRegistrationRequest;
 import com.forgerock.openbanking.exercise.tpp.model.as.registration.OIDCRegistrationResponse;
 import com.forgerock.openbanking.exercise.tpp.model.aspsp.AspspConfiguration;
-import com.forgerock.openbanking.exercise.tpp.oidc.OIDCConstants;
-import com.forgerock.openbanking.exercise.tpp.openbanking.OpenBankingConstants;
+import com.forgerock.openbanking.exercise.tpp.constants.OIDCConstants;
+import com.forgerock.openbanking.exercise.tpp.constants.OpenBankingConstants;
+import com.forgerock.openbanking.exercise.tpp.model.directory.SoftwareStatement;
 import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationMongoRepository;
+import com.forgerock.openbanking.exercise.tpp.services.DirectoryService;
 import com.forgerock.openbanking.exercise.tpp.services.JwkManagementService;
 import com.forgerock.openbanking.exercise.tpp.services.aspsp.as.ASDiscoveryService;
 import com.forgerock.openbanking.exercise.tpp.services.aspsp.as.ASPSPASRegistrationService;
@@ -41,6 +43,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -64,90 +67,59 @@ public class TPPRegistrationController implements TPPRegistration {
     private ASDiscoveryService asDiscoveryService;
     @Autowired
     private ASPSPASRegistrationService aspspAsRegistrationService;
+    @Autowired
+    private DirectoryService directoryService;
 
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private TppConfiguration tppConfiguration;
     @Autowired
     private RSDiscoveryService rsDiscoveryService;
     @Autowired
     private JwkManagementService jwkManagementService;
     @Autowired
     private AspspConfigurationMongoRepository aspspConfigurationRepository;
+    @Autowired
+    private TppConfiguration tppConfiguration;
 
     @Override
     public ResponseEntity registerToAspsp(
-            @ApiParam(value = "The ASPSP name", required = true)
-            @RequestParam("name") String name,
-
-            @ApiParam(value = "The ASPSP logo", required = false)
-            @RequestParam(value = "logo", required = false) String logo,
-
             @ApiParam(value = "The ASPSP financial ID", required = true)
-            @RequestParam(value = "financialID", required = true) String financialID,
+            @RequestHeader(value = "financial_id") String financialID,
 
             @ApiParam(value = "The ASPSP-AS OIDC root endpoint", required = true)
-            @RequestParam("oidcRootEndpoint") String oidcRootEndpoint,
+            @RequestHeader("as_discovery_endpoint") String oidcRootEndpoint,
 
             @ApiParam(value = "The ASPSP-RS discovery endpoint", required = true)
-            @RequestParam("discoveryEndpoint") String discoveryEndpoint,
-
-            @ApiParam(value = "The ASPSP-AS register endpoint", required = false)
-            @RequestParam(value = "registrationEndpoint", required = false) String registrationEndpoint
+            @RequestHeader("rs_discovery_endpoint") String discoveryEndpoint
     ) {
-        LOGGER.debug("Received a aspsp request for an ASPSP: name '{}', logo '{}', financialID {}," +
-                " oidcRootEndpoint {}, discoveryEndpoint {}, registrationEndpoint {}", name, logo, financialID,
-                oidcRootEndpoint, discoveryEndpoint, registrationEndpoint
+
+        LOGGER.debug("Received a aspsp request for an ASPSP: financialID {}," +
+                " oidcRootEndpoint {}, discoveryEndpoint {}", financialID,
+                oidcRootEndpoint, discoveryEndpoint
         );
 
         LOGGER.debug("Call the OIDC discovery endpoint {}", oidcRootEndpoint);
         OIDCDiscoveryResponse oidcDiscoveryResponse = asDiscoveryService.discovery(oidcRootEndpoint);
-        if (registrationEndpoint == null) {
-            registrationEndpoint = oidcDiscoveryResponse.getRegistrationEndpoint();
-        }
+        String registrationEndpoint = oidcDiscoveryResponse.getRegistrationEndpoint();
         LOGGER.debug("The OIDC aspsp endpoint: {}", oidcRootEndpoint);
 
         try {
-            String ssa = tppConfiguration.getSsa();
+            String ssa = directoryService.getSSA();
             LOGGER.debug("The SSA we are going to use: {}", ssa);
 
-            String registrationRequest = generateRegistrationRequest(oidcDiscoveryResponse, generateOIDCRegistrationRequest(oidcDiscoveryResponse), ssa);
+            SoftwareStatement softwareStatement = directoryService.getSoftwareStatement();
+            LOGGER.debug("The SSA we are going to use: {}", ssa);
+
+            String registrationRequest = generateRegistrationRequest(softwareStatement, oidcDiscoveryResponse,
+                    generateOIDCRegistrationRequest(softwareStatement, oidcDiscoveryResponse), ssa);
             LOGGER.debug("The aspsp request generated : {}", registrationRequest);
 
             OIDCRegistrationResponse oidcRegistrationResponse = aspspAsRegistrationService.register(
                     registrationEndpoint, registrationRequest);
             LOGGER.debug("We are successfully registered : {}", oidcRegistrationResponse);
 
-            LOGGER.debug("We call the RS discovery endpoint : {}", discoveryEndpoint);
-            OBDiscoveryResponse rsDiscovery = rsDiscoveryService.discovery(discoveryEndpoint);
-            LOGGER.debug("The RS discovery response : {}", rsDiscovery);
-
-            Optional<OBDiscoveryAPI<OBDiscoveryAPILinksPayment1>> paymentInitiationAPI = rsDiscovery.getData().getPaymentInitiationAPI(tppConfiguration.getVersion());
-            Optional<OBDiscoveryAPI<OBDiscoveryAPILinksAccount1>> accountAndTransactionAPI = rsDiscovery.getData().getAccountAndTransactionAPI(tppConfiguration.getVersion());
-
-            if (!paymentInitiationAPI.isPresent()
-                    || !accountAndTransactionAPI.isPresent()) {
-                LOGGER.warn("RS doesn't implement version '{}' of the Open Banking standard.", tppConfiguration.getVersion());
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                        "RS doesn't implement version '" + tppConfiguration.getVersion()
-                                + "' of the Open Banking standard and this TPP only support this version.");
-            }
-
-            LOGGER.debug("Register the ASPSP configuration");
-            AspspConfiguration aspspConfiguration = new AspspConfiguration();
-            aspspConfiguration.setDiscoveryEndpoint(discoveryEndpoint);
-            aspspConfiguration.setOidcDiscoveryResponse(oidcDiscoveryResponse);
-            aspspConfiguration.setName(name);
-            aspspConfiguration.setLogo(logo);
-            aspspConfiguration.setFinancialId(financialID);
-            aspspConfiguration.setSsa(ssa);
-            aspspConfiguration.setOidcRegistrationResponse(oidcRegistrationResponse);
-            aspspConfiguration.setRegistrationEndpoint(registrationEndpoint);
-            aspspConfiguration.setDiscoveryAPILinksPayment(paymentInitiationAPI.get().getLinks());
-            aspspConfiguration.setDiscoveryAPILinksAccount(accountAndTransactionAPI.get().getLinks());
-
-            return ResponseEntity.ok(aspspConfigurationRepository.save(aspspConfiguration));
+            return saveRegistration(oidcRegistrationResponse, registrationEndpoint, discoveryEndpoint, oidcDiscoveryResponse,
+                    softwareStatement, financialID);
         } catch (HttpServerErrorException | HttpClientErrorException e) {
             LOGGER.error("Couldn't read the error returned by the RS: {}", e.getResponseBodyAsString(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getResponseBodyAsString());
@@ -166,11 +138,73 @@ public class TPPRegistrationController implements TPPRegistration {
         if (!optionalAspspConfiguration.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ASPSP '" + aspspId + "' wasn't registered.");
         }
-        aspspAsRegistrationService.unregister(optionalAspspConfiguration.get());
+
+        aspspAsRegistrationService.unregister(optionalAspspConfiguration.get().getRegistrationEndpoint());
+        aspspConfigurationRepository.delete(optionalAspspConfiguration.get());
         return ResponseEntity.ok("ASPSP '" + aspspId + "'  unregistered successfully");
     }
 
-    private OIDCRegistrationRequest generateOIDCRegistrationRequest(OIDCDiscoveryResponse oidcDiscoveryResponse) {
+    @Override
+    public ResponseEntity loadAspspConfig(
+            @ApiParam(value = "The ASPSP financial ID", required = true)
+            @RequestHeader(value = "financial_id") String financialID,
+
+            @ApiParam(value = "The ASPSP-AS OIDC root endpoint", required = true)
+            @RequestHeader("as_discovery_endpoint") String oidcRootEndpoint,
+
+            @ApiParam(value = "The ASPSP-RS discovery endpoint", required = true)
+            @RequestHeader("rs_discovery_endpoint") String discoveryEndpoint
+    ) throws Exception {
+        LOGGER.debug("Call the OIDC discovery endpoint {}", oidcRootEndpoint);
+        OIDCDiscoveryResponse oidcDiscoveryResponse = asDiscoveryService.discovery(oidcRootEndpoint);
+        String registrationEndpoint = oidcDiscoveryResponse.getRegistrationEndpoint();
+        LOGGER.debug("The OIDC aspsp endpoint: {}", oidcRootEndpoint);
+        SoftwareStatement softwareStatement = directoryService.getSoftwareStatement();
+
+        OIDCRegistrationResponse oidcRegistrationResponse = aspspAsRegistrationService.getRegistration(registrationEndpoint);
+        return saveRegistration(oidcRegistrationResponse, registrationEndpoint, discoveryEndpoint, oidcDiscoveryResponse,
+                softwareStatement, financialID);
+    }
+
+    private ResponseEntity saveRegistration(OIDCRegistrationResponse oidcRegistrationResponse, String registrationEndpoint, String discoveryEndpoint, OIDCDiscoveryResponse oidcDiscoveryResponse, SoftwareStatement softwareStatement,
+                       String financialID) throws Exception {
+        LOGGER.debug("We call the RS discovery endpoint : {}", discoveryEndpoint);
+        OBDiscoveryResponse rsDiscovery = rsDiscoveryService.discovery(discoveryEndpoint);
+        LOGGER.debug("The RS discovery response : {}", rsDiscovery);
+
+        Optional<OBDiscoveryAPI<OBDiscoveryAPILinksPayment1>> paymentInitiationAPI = rsDiscovery.getData().getPaymentInitiationAPI(tppConfiguration.getVersion());
+        Optional<OBDiscoveryAPI<OBDiscoveryAPILinksAccount1>> accountAndTransactionAPI = rsDiscovery.getData().getAccountAndTransactionAPI(tppConfiguration.getVersion());
+
+        if (!paymentInitiationAPI.isPresent()
+                || !accountAndTransactionAPI.isPresent()) {
+            LOGGER.warn("RS doesn't implement version '{}' of the Open Banking standard.", tppConfiguration.getVersion());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    "RS doesn't implement version '" + tppConfiguration.getVersion()
+                            + "' of the Open Banking standard and this TPP only support this version.");
+        }
+
+        String ssa = directoryService.getSSA();
+
+
+        LOGGER.debug("Register the ASPSP configuration");
+        AspspConfiguration aspspConfiguration = new AspspConfiguration();
+        aspspConfiguration.setDiscoveryEndpoint(discoveryEndpoint);
+        aspspConfiguration.setOidcDiscoveryResponse(oidcDiscoveryResponse);
+        aspspConfiguration.setName(softwareStatement.getName());
+        aspspConfiguration.setLogo(softwareStatement.getLogoUri());
+        aspspConfiguration.setFinancialId(financialID);
+        aspspConfiguration.setSsa(ssa);
+        aspspConfiguration.setOidcRegistrationResponse(oidcRegistrationResponse);
+        aspspConfiguration.setRegistrationEndpoint(registrationEndpoint);
+        aspspConfiguration.setDiscoveryAPILinksPayment(paymentInitiationAPI.get().getLinks());
+        aspspConfiguration.setDiscoveryAPILinksAccount(accountAndTransactionAPI.get().getLinks());
+
+        return ResponseEntity.ok(aspspConfigurationRepository.save(aspspConfiguration));
+    }
+
+
+
+    private OIDCRegistrationRequest generateOIDCRegistrationRequest(SoftwareStatement softwareStatement, OIDCDiscoveryResponse oidcDiscoveryResponse) {
 
         //TODO verify that the OIDC provider supports the features we are asking for
         OIDCRegistrationRequest oidcRegistrationRequest = new OIDCRegistrationRequest();
@@ -179,7 +213,7 @@ public class TPPRegistrationController implements TPPRegistration {
                 Arrays.asList(OpenBankingConstants.Scope.OPENID,
                         OpenBankingConstants.Scope.ACCOUNTS,
                         OpenBankingConstants.Scope.PAYMENTS));
-        oidcRegistrationRequest.setRedirectUris(Arrays.asList(tppConfiguration.getAispRedirectUri(), tppConfiguration.getPispRedirectUri()));
+        oidcRegistrationRequest.setRedirectUris(softwareStatement.getRedirectUris());
 
         oidcRegistrationRequest.setGrantTypes(Arrays.asList(OIDCConstants.GrantType.AUTHORIZATION_CODE,
                 OIDCConstants.GrantType.REFRESH_TOKEN,
@@ -189,8 +223,7 @@ public class TPPRegistrationController implements TPPRegistration {
                 OIDCConstants.ResponseType.CODE + " " + OIDCConstants.ResponseType.ID_TOKEN));
         oidcRegistrationRequest.setApplicationType(OpenBankingConstants.RegistrationTppRequestClaims.APPLICATION_TYPE_WEB);
 
-        oidcRegistrationRequest.setRedirectUris(Arrays.asList(tppConfiguration.getPispRedirectUri(),
-                tppConfiguration.getAispRedirectUri()));
+        oidcRegistrationRequest.setRedirectUris(softwareStatement.getRedirectUris());
 
         oidcRegistrationRequest.setTokenEndpointAuthMethod(OIDCConstants.TokenEndpointAuthMethods.PRIVATE_KEY_JWT);
         oidcRegistrationRequest.setTokenEndpointAuthSigningAlg(JWSAlgorithm.RS256.getName());
@@ -209,7 +242,8 @@ public class TPPRegistrationController implements TPPRegistration {
      *
      * @return a JWT that can be used to register the TPP
      */
-    private String generateRegistrationRequest(OIDCDiscoveryResponse oidcDiscoveryResponse,
+    private String generateRegistrationRequest(SoftwareStatement softwareStatement,
+                                               OIDCDiscoveryResponse oidcDiscoveryResponse,
                                               OIDCRegistrationRequest oidcRegistrationRequest, String ssa) throws Exception {
 
         String asIssuerId = oidcDiscoveryResponse.getIssuer();
@@ -222,6 +256,6 @@ public class TPPRegistrationController implements TPPRegistration {
             requestParameterClaims.claim(entry.getKey(), entry.getValue());
         }
         requestParameterClaims.claim(OpenBankingConstants.RegistrationTppRequestClaims.SOFTWARE_STATEMENT, ssa);
-        return jwkManagementService.signJwt(tppConfiguration.getSoftwareId(), requestParameterClaims.build());
+        return jwkManagementService.signJwt(softwareStatement.getId(), requestParameterClaims.build());
     }
 }

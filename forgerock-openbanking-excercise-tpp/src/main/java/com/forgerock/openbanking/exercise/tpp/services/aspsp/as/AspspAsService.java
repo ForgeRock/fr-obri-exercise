@@ -20,8 +20,8 @@ import com.forgerock.openbanking.exercise.tpp.model.as.registration.OIDCRegistra
 import com.forgerock.openbanking.exercise.tpp.model.aspsp.AspspConfiguration;
 import com.forgerock.openbanking.exercise.tpp.model.claim.Claim;
 import com.forgerock.openbanking.exercise.tpp.model.oidc.AccessTokenResponse;
-import com.forgerock.openbanking.exercise.tpp.oidc.OIDCConstants;
-import com.forgerock.openbanking.exercise.tpp.openbanking.OpenBankingConstants;
+import com.forgerock.openbanking.exercise.tpp.constants.OIDCConstants;
+import com.forgerock.openbanking.exercise.tpp.constants.OpenBankingConstants;
 import com.forgerock.openbanking.exercise.tpp.services.JwkManagementService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;

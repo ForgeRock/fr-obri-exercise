@@ -17,17 +17,8 @@
 package com.forgerock.openbanking.exercise.tpp.services;
 
 import com.forgerock.openbanking.exercise.tpp.configuration.TppConfiguration;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.crypto.ECDSASigner;
-import com.nimbusds.jose.crypto.RSASSASigner;
-import com.nimbusds.jose.jwk.ECKey;
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.RSAKey;
+import com.forgerock.openbanking.exercise.tpp.model.directory.SoftwareStatement;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,34 +29,27 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.util.Date;
-import java.util.UUID;
-
 @Service
-public class JwkManagementService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(JwkManagementService.class);
+public class DirectoryService {
+    private final static Logger LOGGER = LoggerFactory.getLogger(DirectoryService.class);
 
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
     private TppConfiguration tppConfiguration;
 
-    public String signJwt(String issuerId, JWTClaimsSet jwtClaimsSet) throws Exception {
+    public String getSSA() throws Exception {
         HttpHeaders headers = new HttpHeaders();
-        if (issuerId != null) {
-            headers.add("issuerId", issuerId);
-        }
-        HttpEntity<String> request = new HttpEntity<>(jwtClaimsSet.toString(), headers);
-        LOGGER.debug("Sign claims {}", jwtClaimsSet);
-        return restTemplate.postForObject(tppConfiguration.getJwkms() + "/api/crypto/signClaims", request, String.class);
+        HttpEntity<String> request = new HttpEntity<>(headers);
+        return restTemplate.postForObject(tppConfiguration.getDirectory() + "/api/software-statement/current/ssa", request, String.class);
+    }
+
+    public SoftwareStatement getSoftwareStatement() {
+        return restTemplate.getForEntity(tppConfiguration.getDirectory() + "/api/software-statement/current/", SoftwareStatement.class).getBody();
     }
 
     public String testmatls() {
-        return restTemplate.getForEntity(tppConfiguration.getJwkms() + "/mtls/test", String.class).getBody();
+        return restTemplate.getForEntity(tppConfiguration.getDirectory() + "/api/matls/test", String.class).getBody();
+
     }
 }

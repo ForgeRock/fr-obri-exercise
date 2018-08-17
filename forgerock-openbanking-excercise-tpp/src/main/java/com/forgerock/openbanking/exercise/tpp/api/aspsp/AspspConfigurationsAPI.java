@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.List;
 
 @Api(value = "AspspConfigurations", description = "ASPSP currently registered with this TPP")
-@RequestMapping("/aspspConfiguration/")
+@RequestMapping("/api/configuration/aspsp")
 public interface AspspConfigurationsAPI {
 
     @ApiOperation(value = "Get AspspConfigurations", notes = "Get the list of ASPSP which this TPP can trigger an OB flow.",

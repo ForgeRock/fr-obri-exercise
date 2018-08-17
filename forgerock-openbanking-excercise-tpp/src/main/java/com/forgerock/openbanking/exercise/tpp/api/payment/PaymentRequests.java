@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletResponse;
 
 @Api(value = "payment requests", description = "Payment requests API")
-@RequestMapping("/payments/")
+@RequestMapping("/api/open-banking/payment-requests")
 public interface PaymentRequests {
 
     @ApiOperation(value = "Initiate a payment request",
@@ -42,7 +42,7 @@ public interface PaymentRequests {
             @ApiResponse(code = 406, message = "Not Acceptable", response = Void.class),
             @ApiResponse(code = 429, message = "Too Many Requests", response = Void.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Void.class) })
-    @RequestMapping(value = "initiatePayment", method = RequestMethod.POST)
+    @RequestMapping(value = "/initiate", method = RequestMethod.POST)
     ResponseEntity<String> initiatePayment(
             @ApiParam(value = "The ASPSP ID", required = true)
             @RequestParam(value = "aspspId") String aspspId
@@ -56,7 +56,7 @@ public interface PaymentRequests {
             @ApiResponse(code = 302, message = "The user is redirected to the successful uri or the failure one, " +
                     "depending of the situation that happened."),
     })
-    @RequestMapping(value = "exchange_code", method = RequestMethod.GET)
+    @RequestMapping(value = "/exchange_code", method = RequestMethod.GET)
     ResponseEntity<String> exchangeCode(
             @RequestParam(value = "code") String code,
             @RequestParam(value = "id_token") String idToken,

@@ -21,7 +21,7 @@ import com.forgerock.openbanking.exercise.tpp.model.aspsp.AspspConfiguration;
 import com.forgerock.openbanking.exercise.tpp.model.oidc.AccessTokenResponse;
 import com.forgerock.openbanking.exercise.tpp.model.oidc.OIDCState;
 import com.forgerock.openbanking.exercise.tpp.model.payment.PaymentSetup;
-import com.forgerock.openbanking.exercise.tpp.openbanking.OpenBankingConstants;
+import com.forgerock.openbanking.exercise.tpp.constants.OpenBankingConstants;
 import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationMongoRepository;
 import com.forgerock.openbanking.exercise.tpp.repository.OIDCStateMongoRepository;
 import com.forgerock.openbanking.exercise.tpp.repository.PaymentSetupRepository;

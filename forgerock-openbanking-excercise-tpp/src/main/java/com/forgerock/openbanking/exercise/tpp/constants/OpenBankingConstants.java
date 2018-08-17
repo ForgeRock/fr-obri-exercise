@@ -14,7 +14,7 @@
  *  Copyright 2018 ForgeRock AS.
  *
  */
-package com.forgerock.openbanking.exercise.tpp.openbanking;
+package com.forgerock.openbanking.exercise.tpp.constants;
 
 /**
  * All the constants defined by the Open Banking standard.

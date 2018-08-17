@@ -19,14 +19,11 @@ package com.forgerock.openbanking.exercise.tpp.api.registration;
 import com.forgerock.openbanking.exercise.tpp.model.aspsp.AspspConfiguration;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 
 @Api(value = "aspsp", description = "Register the current TPP to an ASPSP")
-@RequestMapping("/registration/")
+@RequestMapping("/api/registration/")
 public interface TPPRegistration {
 
     @ApiOperation(value = "Register the current TPP to an ASPSP", response = AspspConfiguration.class)
@@ -44,23 +41,14 @@ public interface TPPRegistration {
             produces = { "application/json; charset=utf-8" },
             method = RequestMethod.POST)
     ResponseEntity<AspspConfiguration> registerToAspsp(
-            @ApiParam(value = "The ASPSP name", required = true)
-            @RequestParam("name") String name,
-
-            @ApiParam(value = "The ASPSP logo", required = false)
-            @RequestParam(value = "logo", required = false) String logo,
-
             @ApiParam(value = "The ASPSP financial ID", required = true)
-            @RequestParam(value = "financialID", required = true) String financialID,
+            @RequestHeader(value = "financial_id") String financialID,
 
             @ApiParam(value = "The ASPSP-AS OIDC root endpoint", required = true)
-            @RequestParam("oidcRootEndpoint") String oidcRootEndpoint,
+            @RequestHeader("as_discovery_endpoint") String oidcRootEndpoint,
 
             @ApiParam(value = "The ASPSP-RS discovery endpoint", required = true)
-            @RequestParam("discoveryEndpoint") String discoveryEndpoint,
-
-            @ApiParam(value = "The ASPSP-AS register endpoint", required = false)
-            @RequestParam(value = "registrationEndpoint", required = false) String registrationEndpoint
+            @RequestHeader("rs_discovery_endpoint") String discoveryEndpoint
     );
 
     @ApiOperation(value = "Unregister the current TPP to an ASPSP", response = AspspConfiguration.class)
@@ -80,4 +68,17 @@ public interface TPPRegistration {
             @ApiParam(value = "The ASPSP ID", required = true)
             @PathVariable("aspspId") String aspspId
     );
+
+    @RequestMapping(value = "/aspsp",
+            method = RequestMethod.GET)
+    ResponseEntity<AspspConfiguration> loadAspspConfig(
+            @ApiParam(value = "The ASPSP financial ID", required = true)
+            @RequestHeader(value = "financial_id") String financialID,
+
+            @ApiParam(value = "The ASPSP-AS OIDC root endpoint", required = true)
+            @RequestHeader("as_discovery_endpoint") String oidcRootEndpoint,
+
+            @ApiParam(value = "The ASPSP-RS discovery endpoint", required = true)
+            @RequestHeader("rs_discovery_endpoint") String discoveryEndpoint
+    ) throws Exception;
 }
