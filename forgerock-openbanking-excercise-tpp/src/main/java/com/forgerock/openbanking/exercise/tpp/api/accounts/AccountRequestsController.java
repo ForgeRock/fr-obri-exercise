@@ -103,7 +103,7 @@ public class AccountRequestsController implements AccountRequests {
 
             //redirect to the authorization page with the request parameter.
             return new ResponseEntity<>(aspspAsService.hybridFlow(aspspConfiguration, state, nonce, requestParameter,
-                    tppConfiguration.getAispRedirectUri(), AISP_SCOPES), HttpStatus.OK);
+                    tppConfiguration.getAispRedirectUri(), AISP_SCOPES), HttpStatus.FOUND);
         }  catch (HttpServerErrorException | HttpClientErrorException e) {
             LOGGER.error("Couldn't read the error returned by the RS", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getResponseBodyAsString());

@@ -66,7 +66,8 @@
         <micrometer.version>1.0.3</micrometer.version>
         <spring-boot-admin.version>2.0.2</spring-boot-admin.version>
         <openam.version>5.5.1</openam.version>
-
+        <selenium.version>3.14.0</selenium.version>
+        <guava.version>26.0</guava.version>
     </properties>
 
     <modules>
@@ -179,12 +180,20 @@
                 <version>${logstash.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-java</artifactId>
+                <version>${selenium.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
+
         </dependencies>
+
     </dependencyManagement>
 
     <pluginRepositories>

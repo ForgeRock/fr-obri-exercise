@@ -66,4 +66,12 @@ public class TppConfiguration {
     public String getDirectory() {
         return directory;
     }
+
+    public void setAispRedirectUri(String aispRedirectUri) {
+        this.aispRedirectUri = aispRedirectUri;
+    }
+
+    public void setPispRedirectUri(String pispRedirectUri) {
+        this.pispRedirectUri = pispRedirectUri;
+    }
 }

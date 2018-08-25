@@ -32,8 +32,8 @@ public interface PaymentRequests {
             notes = "In order to use the payment APIs, you will need to initiate an payment request. This endpoint " +
                     "will allow you to trigger this flow.", response = ResponseEntity.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "The payment request was successfully created. As a result, you will " +
-                    "receive a URI where you will need to redirect the user to. (POST can't trigger a 302 :( )",
+            @ApiResponse(code = 302, message = "The payment request was successfully created. As a result, you will " +
+                    "receive a URI where you will need to redirect the user to.)",
                     response = String.class),
             @ApiResponse(code = 400, message = "Bad Request", response = Void.class),
             @ApiResponse(code = 401, message = "Unauthorized", response = Void.class),
@@ -53,7 +53,7 @@ public interface PaymentRequests {
                     "to the OIDC client. UIs should not try to consumme this endpoint.",
             response = ResponseEntity.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 302, message = "The user is redirected to the successful uri or the failure one, " +
+            @ApiResponse(code = 200, message = "The user is redirected to the successful uri or the failure one, " +
                     "depending of the situation that happened."),
     })
     @RequestMapping(value = "/exchange_code", method = RequestMethod.GET)

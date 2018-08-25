@@ -107,7 +107,7 @@ public class PaymentRequestsController implements PaymentRequests {
 
             //redirect to the authorization page with the request parameter.
             return new ResponseEntity<>(aspspAsService.hybridFlow(aspspConfiguration, oidcState.getState(), nonce, requestParameter,
-                    tppConfiguration.getPispRedirectUri(), PISP_SCOPES), HttpStatus.OK);
+                    tppConfiguration.getPispRedirectUri(), PISP_SCOPES), HttpStatus.FOUND);
         }  catch (HttpServerErrorException | HttpClientErrorException e) {
             LOGGER.error("Couldn't read the error returned by the RS", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getResponseBodyAsString());

@@ -70,7 +70,7 @@ public interface TPPRegistration {
     );
 
     @RequestMapping(value = "/aspsp",
-            method = RequestMethod.GET)
+            method = RequestMethod.PUT)
     ResponseEntity<AspspConfiguration> loadAspspConfig(
             @ApiParam(value = "The ASPSP financial ID", required = true)
             @RequestHeader(value = "financial_id") String financialID,

@@ -1,0 +1,32 @@
+= How to use the Open Banking TPP Java sample
+
+== Introduction
+
+This sample application gives you a base for building your TPP app using Spring.
+It will show you the basic Open Banking flow:
+* On-boarding to the ASPSP
+* Make a payment
+* Retrieve financial data
+
+This sample is based on the ForgeRock OBRI but can easily be integrated with other ASPSP.
+
+== Test the application is running
+
+Try the curl command:
+
+include::{snippets}/hello-world/curl-request.adoc[]
+
+You should have the famous response
+
+include::{snippets}/hello-world/http-response.adoc[]
+
+
+== On-board your TPP
+
+To on-board the sample TPP app with a specific ASPSP, call :
+
+include::{snippets}/on-boarding/curl-request.adoc[]
+
+You should receive the on-boarding result
+
+include::{snippets}/on-boarding/http-response.adoc[]

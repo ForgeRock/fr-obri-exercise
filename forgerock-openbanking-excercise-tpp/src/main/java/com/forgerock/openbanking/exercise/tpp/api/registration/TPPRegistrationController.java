@@ -199,7 +199,9 @@ public class TPPRegistrationController implements TPPRegistration {
         aspspConfiguration.setDiscoveryAPILinksPayment(paymentInitiationAPI.get().getLinks());
         aspspConfiguration.setDiscoveryAPILinksAccount(accountAndTransactionAPI.get().getLinks());
 
-        return ResponseEntity.ok(aspspConfigurationRepository.save(aspspConfiguration));
+        aspspConfiguration = aspspConfigurationRepository.save(aspspConfiguration);
+
+        return ResponseEntity.ok(new RegistrationResponse(aspspConfiguration.getId()));
     }
 
 
@@ -257,5 +259,23 @@ public class TPPRegistrationController implements TPPRegistration {
         }
         requestParameterClaims.claim(OpenBankingConstants.RegistrationTppRequestClaims.SOFTWARE_STATEMENT, ssa);
         return jwkManagementService.signJwt(softwareStatement.getId(), requestParameterClaims.build());
+    }
+
+    public static class RegistrationResponse {
+        private String id;
+
+        public RegistrationResponse() {}
+
+        public RegistrationResponse(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
     }
 }

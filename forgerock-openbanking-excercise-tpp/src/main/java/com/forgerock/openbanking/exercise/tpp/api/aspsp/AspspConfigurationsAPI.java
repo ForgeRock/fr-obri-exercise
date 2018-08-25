@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.List;
 
 @Api(value = "AspspConfigurations", description = "ASPSP currently registered with this TPP")
-@RequestMapping("/api/configuration/aspsp")
+@RequestMapping("/api/aspsp")
 public interface AspspConfigurationsAPI {
 
     @ApiOperation(value = "Get AspspConfigurations", notes = "Get the list of ASPSP which this TPP can trigger an OB flow.",
@@ -43,7 +43,7 @@ public interface AspspConfigurationsAPI {
             @ApiResponse(code = 429, message = "Too Many Requests", response = Void.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Void.class) })
 
-    @RequestMapping(value = "/",
+    @RequestMapping(value = "",
             produces = { "application/json; charset=utf-8" },
             method = RequestMethod.GET)
     ResponseEntity<List<AspspConfiguration>> getAspspConfigurations(

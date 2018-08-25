@@ -43,7 +43,7 @@ server:
 
 tpp:
   obri:
-    domain: ob.forgerock.financial
+    domain: integ-ob.forgerock.financial
   root: https://${spring.hostname}:${server.port}/open-banking/v1.1
   aisp:
     redirect_uri: https://${spring.hostname}:${server.port}/web/exchange_code/aisp   #<-- replace this by the redirect uri you have setup in your SSA
