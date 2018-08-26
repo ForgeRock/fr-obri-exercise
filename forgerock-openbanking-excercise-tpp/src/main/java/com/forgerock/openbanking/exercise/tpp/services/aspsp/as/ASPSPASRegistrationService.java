@@ -17,8 +17,7 @@
 package com.forgerock.openbanking.exercise.tpp.services.aspsp.as;
 
 import com.forgerock.openbanking.exercise.tpp.model.as.registration.OIDCRegistrationResponse;
-import com.forgerock.openbanking.exercise.tpp.model.aspsp.AspspConfiguration;
-import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationMongoRepository;
+import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public class ASPSPASRegistrationService {
     @Resource(name = "restTemplateForRS")
     private RestTemplate restTemplate;
     @Autowired
-    private AspspConfigurationMongoRepository aspspConfigurationRepository;
+    private AspspConfigurationRepository aspspConfigurationRepository;
 
     public OIDCRegistrationResponse register(String registrationEndpoint, String registrationRequest) throws HttpClientErrorException {
         LOGGER.info("Register a new TPP to the ASPSP-AS");

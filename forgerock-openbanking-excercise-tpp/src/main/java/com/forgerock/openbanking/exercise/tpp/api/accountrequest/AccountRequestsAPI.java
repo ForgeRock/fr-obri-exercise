@@ -14,7 +14,7 @@
  *  Copyright 2018 ForgeRock AS.
  *
  */
-package com.forgerock.openbanking.exercise.tpp.api.accounts;
+package com.forgerock.openbanking.exercise.tpp.api.accountrequest;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Api(value = "account request", description = "Account requests API")
 @RequestMapping("/api/open-banking/account-requests/")
-public interface AccountRequests {
+public interface AccountRequestsAPI {
 
     @ApiOperation(value = "Initiate an account request",
             notes = "In order to use the account APIs, you will need to initiate an account request. This endpoint " +

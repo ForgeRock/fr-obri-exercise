@@ -46,6 +46,5 @@ public interface AspspConfigurationsAPI {
     @RequestMapping(value = "",
             produces = { "application/json; charset=utf-8" },
             method = RequestMethod.GET)
-    ResponseEntity<List<AspspConfiguration>> getAspspConfigurations(
-    );
+    ResponseEntity<Iterable<AspspConfiguration>> getAspspConfigurations();
 }

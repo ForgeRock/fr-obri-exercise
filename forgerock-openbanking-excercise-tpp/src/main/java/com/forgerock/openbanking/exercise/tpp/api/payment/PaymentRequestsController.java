@@ -17,13 +17,13 @@
 package com.forgerock.openbanking.exercise.tpp.api.payment;
 
 import com.forgerock.openbanking.exercise.tpp.configuration.TppConfiguration;
+import com.forgerock.openbanking.exercise.tpp.constants.OpenBankingConstants;
 import com.forgerock.openbanking.exercise.tpp.model.aspsp.AspspConfiguration;
 import com.forgerock.openbanking.exercise.tpp.model.oidc.AccessTokenResponse;
 import com.forgerock.openbanking.exercise.tpp.model.oidc.OIDCState;
 import com.forgerock.openbanking.exercise.tpp.model.payment.PaymentSetup;
-import com.forgerock.openbanking.exercise.tpp.constants.OpenBankingConstants;
-import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationMongoRepository;
-import com.forgerock.openbanking.exercise.tpp.repository.OIDCStateMongoRepository;
+import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationRepository;
+import com.forgerock.openbanking.exercise.tpp.repository.OIDCStateRepository;
 import com.forgerock.openbanking.exercise.tpp.repository.PaymentSetupRepository;
 import com.forgerock.openbanking.exercise.tpp.services.aspsp.as.AspspAsService;
 import com.forgerock.openbanking.exercise.tpp.services.aspsp.rs.RSPaymentAPIService;
@@ -65,9 +65,9 @@ public class PaymentRequestsController implements PaymentRequests {
     @Autowired
     private PaymentSetupRepository paymentSetupRepository;
     @Autowired
-    private OIDCStateMongoRepository oidcStateRepository;
+    private OIDCStateRepository oidcStateRepository;
     @Autowired
-    private AspspConfigurationMongoRepository aspspConfigurationRepository;
+    private AspspConfigurationRepository aspspConfigurationRepository;
     /**
      * The initiate payment as defined by the OpenBanking standard.
      *
@@ -102,12 +102,12 @@ public class PaymentRequestsController implements PaymentRequests {
             String nonce = oidcState.getState();
             //create the request parameter
             String requestParameter = aspspAsService.generateRequestParameter(aspspConfiguration, paymentID, oidcState.getState(), nonce,
-                    tppConfiguration.getPispRedirectUri(), PISP_SCOPES);
+                    tppConfiguration.getRedirectUris().getPisp(), PISP_SCOPES);
             LOGGER.debug("Start the hybrid flow with the following request param '{}'", requestParameter);
 
             //redirect to the authorization page with the request parameter.
             return new ResponseEntity<>(aspspAsService.hybridFlow(aspspConfiguration, oidcState.getState(), nonce, requestParameter,
-                    tppConfiguration.getPispRedirectUri(), PISP_SCOPES), HttpStatus.FOUND);
+                    tppConfiguration.getRedirectUris().getPisp(), PISP_SCOPES), HttpStatus.FOUND);
         }  catch (HttpServerErrorException | HttpClientErrorException e) {
             LOGGER.error("Couldn't read the error returned by the RS", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getResponseBodyAsString());
@@ -139,7 +139,7 @@ public class PaymentRequestsController implements PaymentRequests {
 
             LOGGER.debug("Exchange the code '{}' to an access token.", code);
             AccessTokenResponse accessTokenResponse = aspspAsService.exchangeCode(code, aspspConfiguration,
-                    tppConfiguration.getPispRedirectUri());
+                    tppConfiguration.getRedirectUris().getPisp());
             LOGGER.debug("Received an access token '{}' in exchange of the code.", accessTokenResponse.access_token);
 
             //Validate signatures

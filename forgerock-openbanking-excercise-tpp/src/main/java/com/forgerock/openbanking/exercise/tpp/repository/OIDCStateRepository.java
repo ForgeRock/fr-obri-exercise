@@ -20,5 +20,5 @@ import com.forgerock.openbanking.exercise.tpp.model.oidc.OIDCState;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 
-public interface OIDCStateMongoRepository extends MongoRepository<OIDCState, String> {
+public interface OIDCStateRepository extends MongoRepository<OIDCState, String> {
 }

@@ -17,20 +17,18 @@
 package com.forgerock.openbanking.exercise.tpp.api.aspsp;
 
 import com.forgerock.openbanking.exercise.tpp.model.aspsp.AspspConfiguration;
-import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationMongoRepository;
+import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
-
 @Controller
 public class AspspConfigurationsAPIController implements AspspConfigurationsAPI {
     @Autowired
-    private AspspConfigurationMongoRepository aspspConfigurationRepository;
+    private AspspConfigurationRepository aspspConfigurationRepository;
 
     @Override
-    public ResponseEntity<List<AspspConfiguration>> getAspspConfigurations() {
+    public ResponseEntity<Iterable<AspspConfiguration>> getAspspConfigurations() {
         return ResponseEntity.ok(aspspConfigurationRepository.findAll());
     }
 }

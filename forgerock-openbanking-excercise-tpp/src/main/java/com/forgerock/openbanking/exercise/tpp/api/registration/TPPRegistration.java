@@ -19,7 +19,10 @@ package com.forgerock.openbanking.exercise.tpp.api.registration;
 import com.forgerock.openbanking.exercise.tpp.model.aspsp.AspspConfiguration;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 
 @Api(value = "aspsp", description = "Register the current TPP to an ASPSP")

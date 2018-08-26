@@ -18,12 +18,9 @@ package com.forgerock.openbanking.exercise.tpp.services;
 
 import com.forgerock.openbanking.exercise.tpp.configuration.TppConfiguration;
 import com.forgerock.openbanking.exercise.tpp.model.directory.SoftwareStatement;
-import com.nimbusds.jwt.JWTClaimsSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -41,15 +38,15 @@ public class DirectoryService {
     public String getSSA() throws Exception {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> request = new HttpEntity<>(headers);
-        return restTemplate.postForObject(tppConfiguration.getDirectory() + "/api/software-statement/current/ssa", request, String.class);
+        return restTemplate.postForObject(tppConfiguration.getDirectory().getEndpoint() + "/api/software-statement/current/ssa", request, String.class);
     }
 
     public SoftwareStatement getSoftwareStatement() {
-        return restTemplate.getForEntity(tppConfiguration.getDirectory() + "/api/software-statement/current/", SoftwareStatement.class).getBody();
+        return restTemplate.getForEntity(tppConfiguration.getDirectory().getEndpoint() + "/api/software-statement/current/", SoftwareStatement.class).getBody();
     }
 
     public String testmatls() {
-        return restTemplate.getForEntity(tppConfiguration.getDirectory() + "/api/matls/test", String.class).getBody();
+        return restTemplate.getForEntity(tppConfiguration.getDirectory().getEndpoint() + "/api/matls/test", String.class).getBody();
 
     }
 }

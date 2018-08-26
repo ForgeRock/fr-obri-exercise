@@ -14,15 +14,15 @@
  *  Copyright 2018 ForgeRock AS.
  *
  */
-package com.forgerock.openbanking.exercise.tpp.api.accounts;
+package com.forgerock.openbanking.exercise.tpp.api.accountrequest;
 
 import com.forgerock.openbanking.exercise.tpp.configuration.TppConfiguration;
+import com.forgerock.openbanking.exercise.tpp.constants.OpenBankingConstants;
 import com.forgerock.openbanking.exercise.tpp.model.aspsp.AspspConfiguration;
 import com.forgerock.openbanking.exercise.tpp.model.oidc.AccessTokenResponse;
 import com.forgerock.openbanking.exercise.tpp.model.oidc.OIDCState;
-import com.forgerock.openbanking.exercise.tpp.constants.OpenBankingConstants;
-import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationMongoRepository;
-import com.forgerock.openbanking.exercise.tpp.repository.OIDCStateMongoRepository;
+import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationRepository;
+import com.forgerock.openbanking.exercise.tpp.repository.OIDCStateRepository;
 import com.forgerock.openbanking.exercise.tpp.services.aspsp.as.AspspAsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +40,9 @@ import java.util.List;
 
 
 @Controller
-public class AccountRequestsController implements AccountRequests {
+public class AccountRequestsAPIController implements AccountRequestsAPI {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccountRequestsController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountRequestsAPIController.class);
 
     private static final List<String> AISP_SCOPES = Arrays.asList(OpenBankingConstants.Scope.ACCOUNTS,
             OpenBankingConstants.Scope.OPENID);
@@ -54,9 +54,9 @@ public class AccountRequestsController implements AccountRequests {
     @Autowired
     private TppConfiguration tppConfiguration;
     @Autowired
-    private AspspConfigurationMongoRepository aspspConfigurationRepository;
+    private AspspConfigurationRepository aspspConfigurationRepository;
     @Autowired
-    private OIDCStateMongoRepository oidcStateRepository;
+    private OIDCStateRepository oidcStateRepository;
 
     /**
      * The initiate payment as defined by the OpenBanking standard.
@@ -98,12 +98,12 @@ public class AccountRequestsController implements AccountRequests {
 
             //create the request parameter
             String requestParameter = aspspAsService.generateRequestParameter(aspspConfiguration, accountRequestID,
-                    state, nonce, tppConfiguration.getAispRedirectUri(), AISP_SCOPES);
+                    state, nonce, tppConfiguration.getRedirectUris().getAisp(), AISP_SCOPES);
             LOGGER.debug("Start the hybrid flow with the following request param '{}'", requestParameter);
 
             //redirect to the authorization page with the request parameter.
             return new ResponseEntity<>(aspspAsService.hybridFlow(aspspConfiguration, state, nonce, requestParameter,
-                    tppConfiguration.getAispRedirectUri(), AISP_SCOPES), HttpStatus.FOUND);
+                    tppConfiguration.getRedirectUris().getAisp(), AISP_SCOPES), HttpStatus.FOUND);
         }  catch (HttpServerErrorException | HttpClientErrorException e) {
             LOGGER.error("Couldn't read the error returned by the RS", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getResponseBodyAsString());
@@ -133,7 +133,7 @@ public class AccountRequestsController implements AccountRequests {
             AspspConfiguration aspspConfiguration = aspspConfigurationRepository.findById(oidcState.getAspspId()).get();
             LOGGER.debug("Exchange the code '{}' to an access token.", code);
             AccessTokenResponse accessTokenResponse = aspspAsService.exchangeCode(code,
-                    aspspConfiguration, tppConfiguration.getAispRedirectUri());
+                    aspspConfiguration, tppConfiguration.getRedirectUris().getAisp());
             LOGGER.debug("Received an access token '{}' in exchange of the code.", accessTokenResponse.access_token);
             return ResponseEntity.ok(accessTokenResponse.getAccessTokenJWT().serialize());
 

@@ -1,3 +1,4 @@
+:toc: left
 = How to use the Open Banking TPP Java sample
 
 == Introduction
@@ -30,3 +31,28 @@ include::{snippets}/on-boarding/curl-request.adoc[]
 You should receive the on-boarding result
 
 include::{snippets}/on-boarding/http-response.adoc[]
+
+== Make a payment
+
+To make a payment with the sample TPP app to a specific ASPSP :
+
+First, you need to initiate a payment:
+include::{snippets}/PaymentApiTest/initiate-payment/1/curl-request.adoc[]
+
+This will give you the uri where you need to redirect the PSU:
+
+include::{snippets}/PaymentApiTest/initiate-payment/1/http-response.adoc[]
+
+To receive the result of the PSU interacting with his ASPSP, you wait until you receive something in your callback uri.
+When that happened, you will receive the info in the fragment, which will be automatically redirected by a java script into the
+tpp example backend.
+Don't worry, this happen automatically
+
+include::{snippets}/PaymentApiTest/initiate-payment/2/curl-request.adoc[]
+
+As a response, you get the payment result:
+include::{snippets}/PaymentApiTest/initiate-payment/2/http-response.adoc[]
+
+
+
+

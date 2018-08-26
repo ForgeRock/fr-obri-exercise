@@ -111,4 +111,17 @@ public class RSAccountAPIService {
             throw new Exception(e.getResponseBodyAsString(), e);
         }
     }
+
+    /**
+     * Read the PSU accounts, using the access token containing his consent (resulting from the hybrid flow).
+     * @param aspspConfiguration the aspsp configuration where we want to read the accounts
+     * @param accessToken the access token
+     * @return the PSU accounts
+     * @throws Exception
+     */
+    public OBReadResponse1 readAccounts(AspspConfiguration aspspConfiguration, String accessToken)
+            throws Exception {
+        //TODO exercise: Use the postman and the createAccountRequest() to implement a similar function, that does retrieve the user accounts from the RS-ASPSP
+        return null;
+    }
 }

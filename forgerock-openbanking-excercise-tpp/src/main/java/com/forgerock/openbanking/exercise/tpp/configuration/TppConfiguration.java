@@ -16,62 +16,165 @@
  */
 package com.forgerock.openbanking.exercise.tpp.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-@Configuration
+@Service
+@ConfigurationProperties(prefix = "tpp")
 public class TppConfiguration {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TppConfiguration.class);
+    private RedirectUris redirectUris;
 
-    @Value("${tpp.aisp.redirect_uri}")
-    public String aispRedirectUri;
+    private OpenBanking openBanking;
 
-    @Value("${tpp.pisp.redirect_uri}")
-    public String pispRedirectUri;
-
-    @Value("${tpp.openbanking.version}")
-    public String version;
-
-    @Value("${tpp.jwkms}")
     private String jwkms;
-    @Value("${tpp.directory}")
-    private String directory;
 
-    private String ssaContent = null;
+    private DirectoryConfig directory;
 
-    public String getAispRedirectUri() {
-        return aispRedirectUri;
-    }
+    private ASPSPConfig aspsp;
 
-    public String getPispRedirectUri() {
-        return pispRedirectUri;
-    }
-
-    public String getVersion() {
-        return version;
-    }
 
     public String getJwkms() {
         return jwkms;
     }
 
-    public String getDirectory() {
+    public RedirectUris getRedirectUris() {
+        return redirectUris;
+    }
+
+    public void setRedirectUris(RedirectUris redirectUris) {
+        this.redirectUris = redirectUris;
+    }
+
+    public OpenBanking getOpenBanking() {
+        return openBanking;
+    }
+
+    public void setOpenBanking(OpenBanking openBanking) {
+        this.openBanking = openBanking;
+    }
+
+    public void setJwkms(String jwkms) {
+        this.jwkms = jwkms;
+    }
+
+    public DirectoryConfig getDirectory() {
         return directory;
     }
 
-    public void setAispRedirectUri(String aispRedirectUri) {
-        this.aispRedirectUri = aispRedirectUri;
+    public void setDirectory(DirectoryConfig directory) {
+        this.directory = directory;
     }
 
-    public void setPispRedirectUri(String pispRedirectUri) {
-        this.pispRedirectUri = pispRedirectUri;
+    public ASPSPConfig getAspsp() {
+        return aspsp;
+    }
+
+    public void setAspsp(ASPSPConfig aspsp) {
+        this.aspsp = aspsp;
+    }
+
+    public static class ASPSPConfig {
+        private String financialId;
+        private String asDiscoveryEndpoint;
+        private String rsDiscoveryEndpoint;
+
+        public String getFinancialId() {
+            return financialId;
+        }
+
+        public void setFinancialId(String financialId) {
+            this.financialId = financialId;
+        }
+
+        public String getAsDiscoveryEndpoint() {
+            return asDiscoveryEndpoint;
+        }
+
+        public void setAsDiscoveryEndpoint(String asDiscoveryEndpoint) {
+            this.asDiscoveryEndpoint = asDiscoveryEndpoint;
+        }
+
+        public String getRsDiscoveryEndpoint() {
+            return rsDiscoveryEndpoint;
+        }
+
+        public void setRsDiscoveryEndpoint(String rsDiscoveryEndpoint) {
+            this.rsDiscoveryEndpoint = rsDiscoveryEndpoint;
+        }
+    }
+
+    public static class RedirectUris {
+        private String pisp;
+        private String aisp;
+
+        public String getPisp() {
+            return pisp;
+        }
+
+        public void setPisp(String pisp) {
+            this.pisp = pisp;
+        }
+
+        public String getAisp() {
+            return aisp;
+        }
+
+        public void setAisp(String aisp) {
+            this.aisp = aisp;
+        }
+    }
+
+    public static class OpenBanking {
+        private String version;
+
+        public String getVersion() {
+            return version;
+        }
+
+        public void setVersion(String version) {
+            this.version = version;
+        }
+    }
+
+    public static class DirectoryConfig {
+        private String endpoint;
+        private UserConfig user;
+
+        public String getEndpoint() {
+            return endpoint;
+        }
+
+        public void setEndpoint(String endpoint) {
+            this.endpoint = endpoint;
+        }
+
+        public UserConfig getUser() {
+            return user;
+        }
+
+        public void setUser(UserConfig directory) {
+            this.user = directory;
+        }
+    }
+
+    public static class UserConfig {
+        private String username;
+        private String password;
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
     }
 }

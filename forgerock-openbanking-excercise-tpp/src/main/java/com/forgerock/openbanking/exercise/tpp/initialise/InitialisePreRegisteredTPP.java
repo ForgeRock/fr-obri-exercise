@@ -18,7 +18,7 @@ package com.forgerock.openbanking.exercise.tpp.initialise;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forgerock.openbanking.exercise.tpp.model.aspsp.AspspConfiguration;
-import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationMongoRepository;
+import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class InitialisePreRegisteredTPP {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private AspspConfigurationMongoRepository aspspConfigurationMongoRepository;
+    private AspspConfigurationRepository aspspConfigurationMongoRepository;
 
     @Bean
     public CommandLineRunner initialiseAspspConfiguration() {

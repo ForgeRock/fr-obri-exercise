@@ -20,5 +20,5 @@ import com.forgerock.openbanking.exercise.tpp.model.aspsp.AspspConfiguration;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 
-public interface AspspConfigurationMongoRepository extends MongoRepository<AspspConfiguration, String> {
+public interface AspspConfigurationRepository extends MongoRepository<AspspConfiguration, String> {
 }

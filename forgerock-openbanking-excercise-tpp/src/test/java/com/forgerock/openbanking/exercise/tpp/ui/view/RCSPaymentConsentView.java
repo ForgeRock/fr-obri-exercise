@@ -3,7 +3,6 @@ package com.forgerock.openbanking.exercise.tpp.ui.view;
 import com.forgerock.openbanking.exercise.tpp.ui.SeleniumConfig;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 

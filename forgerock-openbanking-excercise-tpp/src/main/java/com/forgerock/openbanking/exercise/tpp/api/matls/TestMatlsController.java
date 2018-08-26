@@ -2,7 +2,6 @@ package com.forgerock.openbanking.exercise.tpp.api.matls;
 
 import com.forgerock.openbanking.exercise.tpp.services.DirectoryService;
 import com.forgerock.openbanking.exercise.tpp.services.JwkManagementService;
-import org.bouncycastle.util.test.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

@@ -18,14 +18,14 @@ package com.forgerock.openbanking.exercise.tpp.api.registration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.forgerock.openbanking.exercise.tpp.configuration.TppConfiguration;
+import com.forgerock.openbanking.exercise.tpp.constants.OIDCConstants;
+import com.forgerock.openbanking.exercise.tpp.constants.OpenBankingConstants;
 import com.forgerock.openbanking.exercise.tpp.model.as.discovery.OIDCDiscoveryResponse;
 import com.forgerock.openbanking.exercise.tpp.model.as.registration.OIDCRegistrationRequest;
 import com.forgerock.openbanking.exercise.tpp.model.as.registration.OIDCRegistrationResponse;
 import com.forgerock.openbanking.exercise.tpp.model.aspsp.AspspConfiguration;
-import com.forgerock.openbanking.exercise.tpp.constants.OIDCConstants;
-import com.forgerock.openbanking.exercise.tpp.constants.OpenBankingConstants;
 import com.forgerock.openbanking.exercise.tpp.model.directory.SoftwareStatement;
-import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationMongoRepository;
+import com.forgerock.openbanking.exercise.tpp.repository.AspspConfigurationRepository;
 import com.forgerock.openbanking.exercise.tpp.services.DirectoryService;
 import com.forgerock.openbanking.exercise.tpp.services.JwkManagementService;
 import com.forgerock.openbanking.exercise.tpp.services.aspsp.as.ASDiscoveryService;
@@ -44,7 +44,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import uk.org.openbanking.datamodel.discovery.OBDiscoveryAPI;
@@ -77,7 +76,7 @@ public class TPPRegistrationController implements TPPRegistration {
     @Autowired
     private JwkManagementService jwkManagementService;
     @Autowired
-    private AspspConfigurationMongoRepository aspspConfigurationRepository;
+    private AspspConfigurationRepository aspspConfigurationRepository;
     @Autowired
     private TppConfiguration tppConfiguration;
 
@@ -172,14 +171,14 @@ public class TPPRegistrationController implements TPPRegistration {
         OBDiscoveryResponse rsDiscovery = rsDiscoveryService.discovery(discoveryEndpoint);
         LOGGER.debug("The RS discovery response : {}", rsDiscovery);
 
-        Optional<OBDiscoveryAPI<OBDiscoveryAPILinksPayment1>> paymentInitiationAPI = rsDiscovery.getData().getPaymentInitiationAPI(tppConfiguration.getVersion());
-        Optional<OBDiscoveryAPI<OBDiscoveryAPILinksAccount1>> accountAndTransactionAPI = rsDiscovery.getData().getAccountAndTransactionAPI(tppConfiguration.getVersion());
+        Optional<OBDiscoveryAPI<OBDiscoveryAPILinksPayment1>> paymentInitiationAPI = rsDiscovery.getData().getPaymentInitiationAPI(tppConfiguration.getOpenBanking().getVersion());
+        Optional<OBDiscoveryAPI<OBDiscoveryAPILinksAccount1>> accountAndTransactionAPI = rsDiscovery.getData().getAccountAndTransactionAPI(tppConfiguration.getOpenBanking().getVersion());
 
         if (!paymentInitiationAPI.isPresent()
                 || !accountAndTransactionAPI.isPresent()) {
-            LOGGER.warn("RS doesn't implement version '{}' of the Open Banking standard.", tppConfiguration.getVersion());
+            LOGGER.warn("RS doesn't implement version '{}' of the Open Banking standard.", tppConfiguration.getOpenBanking().getVersion());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    "RS doesn't implement version '" + tppConfiguration.getVersion()
+                    "RS doesn't implement version '" + tppConfiguration.getOpenBanking().getVersion()
                             + "' of the Open Banking standard and this TPP only support this version.");
         }
 

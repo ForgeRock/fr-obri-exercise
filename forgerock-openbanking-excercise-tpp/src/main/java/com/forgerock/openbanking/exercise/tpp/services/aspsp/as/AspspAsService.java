@@ -16,12 +16,12 @@
  */
 package com.forgerock.openbanking.exercise.tpp.services.aspsp.as;
 
+import com.forgerock.openbanking.exercise.tpp.constants.OIDCConstants;
+import com.forgerock.openbanking.exercise.tpp.constants.OpenBankingConstants;
 import com.forgerock.openbanking.exercise.tpp.model.as.registration.OIDCRegistrationResponse;
 import com.forgerock.openbanking.exercise.tpp.model.aspsp.AspspConfiguration;
 import com.forgerock.openbanking.exercise.tpp.model.claim.Claim;
 import com.forgerock.openbanking.exercise.tpp.model.oidc.AccessTokenResponse;
-import com.forgerock.openbanking.exercise.tpp.constants.OIDCConstants;
-import com.forgerock.openbanking.exercise.tpp.constants.OpenBankingConstants;
 import com.forgerock.openbanking.exercise.tpp.services.JwkManagementService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;

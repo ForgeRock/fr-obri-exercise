@@ -1,16 +1,14 @@
-package com.forgerock.openbanking.exercise.tpp.payment;
+package com.forgerock.openbanking.exercise.tpp.accountrequest;
 
 import com.forgerock.openbanking.exercise.tpp.template.PostOnboardTest;
 import com.forgerock.openbanking.exercise.tpp.ui.view.AMLoginView;
-import com.forgerock.openbanking.exercise.tpp.ui.view.RCSPaymentConsentView;
+import com.forgerock.openbanking.exercise.tpp.ui.view.RCSAccountsConsentView;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.MultiValueMap;
-import uk.org.openbanking.datamodel.payment.OBTransactionIndividualStatus1Code;
-import uk.org.openbanking.datamodel.payment.paymentsubmission.OBPaymentSubmissionResponse1;
 
 import java.net.URI;
 
@@ -21,13 +19,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class PaymentApiTest extends PostOnboardTest {
+public class AccountRequestApiTest extends PostOnboardTest {
 
     @Test
-    public void initiatePayment() throws Exception {
-        //Initiate payment request
+    public void initiateAccountRequest() throws Exception {
+        //Initiate account request
         String redirectedUrl = this.mockMvcForDocs.perform(
-                post("/api/open-banking/payment-requests/initiate")
+                post("/api/open-banking/account-requests/initiate")
                         .param("aspspId", aspspConfigId)
         )
                 .andExpect(status().is(HttpStatus.FOUND.value()))
@@ -38,22 +36,20 @@ public class PaymentApiTest extends PostOnboardTest {
         amLoginView.navigate(redirectedUrl);
         amLoginView.login(tppConfiguration.getDirectory().getUser().getUsername(), tppConfiguration.getDirectory().getUser().getPassword());
 
-        //Accept payment
-        RCSPaymentConsentView paymentConsentView = new RCSPaymentConsentView(config);
-        paymentConsentView.allow();
-        paymentConsentView.submit(0);
+        //Accept account sharing consent
+        RCSAccountsConsentView accountsConsentView = new RCSAccountsConsentView(config);
+        accountsConsentView.allow();
+        accountsConsentView.submit();
 
         //Simulate the javascript redirect, as we are limited by what we can simulate
         MultiValueMap<String, String> queryMap = getQueryMap(new URI(config.getDriver().getCurrentUrl()).getFragment());
-        String obPaymentSubmissionResponseSerialised = this.mockMvcForDocs.perform(
-                get("/api/open-banking/payment-requests/exchange_code")
+        String accessToken = this.mockMvcForDocs.perform(
+                get("/api/open-banking/account-requests/exchange_code")
                         .params(queryMap)
         )
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        OBPaymentSubmissionResponse1 obPaymentSubmissionResponse = mapper.readValue(obPaymentSubmissionResponseSerialised, OBPaymentSubmissionResponse1.class);
-
-        assertThat(obPaymentSubmissionResponse.getData().getStatus()).isEqualTo(OBTransactionIndividualStatus1Code.ACCEPTED_SETTLEMENT_IN_PROCESS);
+        assertThat(accessToken).isNotEmpty();
     }
 }

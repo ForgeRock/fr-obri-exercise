@@ -33,7 +33,7 @@ logging:
           sample: DEBUG
 
 server:
-    port: 7777
+    port: 8080
     ssl:
         enabled: true
         key-alias: transport
@@ -45,13 +45,20 @@ tpp:
   obri:
     domain: integ-ob.forgerock.financial
   root: https://${spring.hostname}:${server.port}/open-banking/v1.1
-  aisp:
-    redirect_uri: https://${spring.hostname}:${server.port}/web/exchange_code/aisp   #<-- replace this by the redirect uri you have setup in your SSA
-  pisp:
-    redirect_uri: https://${spring.hostname}:${server.port}/web/exchange_code/pisp  #<-- replace this by the redirect uri you have setup in your SSA
+  redirect-uris:
+    aisp: https://${spring.hostname}:${server.port}/web/exchange_code/aisp   #<-- replace this by the redirect uri you have setup in your SSA
+    pisp: https://${spring.hostname}:${server.port}/web/exchange_code/pisp  #<-- replace this by the redirect uri you have setup in your SSA
   openbanking:
     version: v2.0
   jwkms: https://jwkms.${tpp.obri.domain}
-  directory: https://service.directory.${tpp.obri.domain}
+  directory:
+    endpoint: https://service.directory.${tpp.obri.domain}
+    user:
+      username: demo
+      password: changeit
+  aspsp:
+    financial-id: 0015800001041REAAY
+    as-discovery-endpoint: https://as.aspsp.${tpp.obri.domain}/oauth2/
+    rs-discovery-endpoint: https://rs.aspsp.${tpp.obri.domain}/open-banking/discovery
 
 preregisteredTpp: classpath:backup/preregisteredForgeTppSample.json
