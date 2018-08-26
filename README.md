@@ -48,3 +48,9 @@ Our functional tests use Selenium, which requires a google chrome driver to run.
 This would need to be installed in your OS system first.
 Follow the instruction here:
 https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver
+
+## Docs of the app
+
+The app generated its own doc when you compile, in the folder target/generated-docs.
+For conveniency, we also host it under https://qcastel.github.io/
+

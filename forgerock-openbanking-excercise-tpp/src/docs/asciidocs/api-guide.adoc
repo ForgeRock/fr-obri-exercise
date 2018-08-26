@@ -5,15 +5,59 @@
 
 This sample application gives you a base for building your TPP app using Spring.
 It will show you the basic Open Banking flow:
-* On-boarding to the ASPSP
-* Make a payment
-* Retrieve financial data
 
-This sample is based on the ForgeRock OBRI but can easily be integrated with other ASPSP.
+* On-boarding to the ASPSP
+* Making a payment
+* Retrieving financial data
+
+This sample is based on the ForgeRock OBRI but can easily be integrated with other ASPSPs.
+
+== Glossary
+
+The Open Banking glossary can be found here:
+https://www.openbanking.org.uk/about-us/glossary/
+
+
+== Install the app
+
+Follow the readme in the github project
+
+== Import client certificate keys from ForgeRock directory
+
+The TPP app will need to consume REST APIs protected by MATLS. What this means is that the SSL connection it does
+with the external service needs to provide what we call a client certificate. It's like an HTTP certificate
+except that it is used for authenticating the client app, for us, the TPP app.
+
+To get this client certificate setup, you need:
+
+* register on the ForgeRock directory https://directory.integ-ob.forgerock.financial
+* login to the directory
+* create a software statement
+* name your software statement
+* as you are here, set the redirect uris to :
+** https://localhost
+** https://tpp.example.com:8080/web/exchange_code/aisp
+** https://tpp.example.com:8080/web/exchange_code/pisp
+* go to the keys tab and download the latest transport key in .pem and .key formats
+* save then in the folder keys/ and rename the corresponding files by:
+** transport.pem
+** transport.key
+* run the bash script `importDirectoryKey.sh` which will load those keys into the java keystore of the app
+
+You are now ready to run the application!
+
+== Compiling the app
+
+Run the usual `mvn clean install`
+You will see that it runs the functional tests. Feel free to explore them!
+Bear in mind that the functional tests expect your software statement to not been on-board yet. Make sure that's the case.
+By default, if you just created the software statement, it would be the case
+
+NOTE: The functional tests uses Selenium, to simulate the PSU interaction.
 
 == Test the application is running
 
-Try the curl command:
+Run the application and try the curl command:
 
 include::{snippets}/hello-world/curl-request.adoc[]
 
@@ -52,6 +96,29 @@ include::{snippets}/PaymentApiTest/initiate-payment/2/curl-request.adoc[]
 
 As a response, you get the payment result:
 include::{snippets}/PaymentApiTest/initiate-payment/2/http-response.adoc[]
+
+== Postman
+
+We shared a little postman collection that could be handy for you, when using this app:
+
+https://documenter.getpostman.com/view/127862/RWTspaaZ
+
+Feel free to add it to your postman and play with it
+
+== Little exercise
+
+This app is yelling for contribution! We prepared one exercise, which should introduce you nicely to this project.
+The goal is to retrieve the PSU financial accounts and return them as json.
+You will find a few 'TODO' that will indicate you where we expect the implementation to be done.
+Submit a PR when you think you are ready and we will integrate your contribution into this sample app.
+We build this app to show you what looks like a base for a TPP application but also give you a taste on what is Open Banking.
+For some of you that are new in Open Banking, it's probably the best way to setup your mind and see if it's something you would like to get more involved in.
+
+== Youtube channel
+
+We got a channel with a few videos. Not all of them are fully up to date, especially the old one. Nevertheless,
+the content in them is still relevant.
+Feel free to dig into it! https://www.youtube.com/playlist?list=PLotly7WaYTXAiDj34bnJgE3Fr1MGEyMMj
 
 
 
