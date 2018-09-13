@@ -38,6 +38,7 @@ You need to get the code locally for the git project repo. For this, you need to
 1. Log in to [Open Banking Reference Implementation]()
 1. Go to [Software Statements](https://directory.ob.forgerock.financial/software-statement)
 1. Click `See More` on your Software Statement you've previously created
+1. Add a redirect URI of `https://localhost`
 1. Go to the `Transport/Signing/Encryption keys` tab and scroll to the bottom
 1. For your transport key click on `Actions` download `Public certificate (.pem)` and `Private certificate (.key)`
 1. Move them from your downloads folder to the root of this directory
