@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-
-openssl pkcs12 -export -in keys/transport.pem -inkey keys/transport.key -name "transport" \
+mkdir -p forgerock-openbanking-excercise-tpp/src/main/resources/keystore
+openssl pkcs12 -export -in *.pem -inkey *.key -name "transport" \
  -out ./forgerock-openbanking-excercise-tpp/src/main/resources/keystore/keystore.p12 -password pass:changeit

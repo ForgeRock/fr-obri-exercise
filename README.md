@@ -34,13 +34,14 @@ You need to get the code locally for the git project repo. For this, you need to
 - Download the latest intellij version (ultimate)
 - Open the project with intellij (you will need to open it as an existing maven project)
 
-### Setup the host files
-
-You will need to create some new hostnames for the application.
-
-```$xslt
-127.0.0.1		tpp.example.com
-```
+### Download and set up keys
+1. Log in to [Open Banking Reference Implementation]()
+1. Go to [Software Statements](https://directory.ob.forgerock.financial/software-statement)
+1. Click `See More` on your Software Statement you've previously created
+1. Go to the `Transport/Signing/Encryption keys` tab and scroll to the bottom
+1. For your transport key click on `Actions` download `Public certificate (.pem)` and `Private certificate (.key)`
+1. Move them from your downloads folder to the root of this directory
+1. Run `importDirectoryKey.sh`
 
 ### Setup the google chrome driver
 

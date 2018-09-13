@@ -36,8 +36,8 @@ To get this client certificate setup, you need:
 * name your software statement
 * as you are here, set the redirect uris to :
 ** https://localhost
-** https://tpp.example.com:8080/web/exchange_code/aisp
-** https://tpp.example.com:8080/web/exchange_code/pisp
+** https://localhost:8080/web/exchange_code/aisp
+** https://localhost:8080/web/exchange_code/pisp
 * go to the keys tab and download the latest transport key in .pem and .key formats
 * save then in the folder keys/ and rename the corresponding files by:
 ** transport.pem
