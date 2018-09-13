@@ -68,6 +68,7 @@
         <openam.version>5.5.1</openam.version>
         <selenium.version>3.14.0</selenium.version>
         <guava.version>26.0</guava.version>
+        <webdrivermanager.version>3.0.0</webdrivermanager.version>
     </properties>
 
     <modules>
@@ -189,6 +190,12 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.github.bonigarcia</groupId>
+                <artifactId>webdrivermanager</artifactId>
+                <version>${webdrivermanager.version}</version>
                 <scope>test</scope>
             </dependency>
 
