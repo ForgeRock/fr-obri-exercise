@@ -43,6 +43,8 @@ You need to get the code locally for the git project repo. For this, you need to
 1. Move them from your downloads folder to the root of this directory
 1. Run `importDirectoryKey.sh`
 
+Note. You'll need to unregister your TPP to run the tests if it's already registered.
+
 ### Setup the google chrome driver
 
 Our functional tests use Selenium, which requires a google chrome driver to run.
