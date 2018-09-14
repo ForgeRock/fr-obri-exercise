@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 public class AccountsApiTest extends PostAISPAccessTokenTest {
 
-    @Ignore("not ready yet")
     @Test
     public void getAccounts() throws Exception {
         String obPaymentSubmissionResponseSerialised = this.mockMvcForDocs.perform(

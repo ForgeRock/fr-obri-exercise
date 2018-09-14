@@ -118,7 +118,7 @@ public class RSAccountAPIService {
      */
     public OBReadAccount2 readAccounts(AspspConfiguration aspspConfiguration, String accessToken)
             throws Exception {
-        //TODO exercise: Use the postman and the createAccountRequest() to implement a similar function, that does retrieve the user accounts from the RS-ASPSP
+        // TODO exercise: Use postman and the method createAccountRequest() to implement a similar function, that retrieves the user accounts from the RS-ASPSP
         return null;
     }
 }
