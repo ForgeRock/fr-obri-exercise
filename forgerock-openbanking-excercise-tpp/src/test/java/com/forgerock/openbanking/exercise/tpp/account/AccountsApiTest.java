@@ -23,7 +23,7 @@ public class AccountsApiTest extends PostAISPAccessTokenTest {
         String obPaymentSubmissionResponseSerialised = this.mockMvcForDocs.perform(
                 get("/api/open-banking/accounts/")
                         .param("aspspId", aspspConfigId)
-                        .param("accessToken", accessToken)
+                        .header("accessToken", accessToken)
         )
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
