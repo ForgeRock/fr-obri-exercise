@@ -65,11 +65,11 @@ public interface TPPRegistration {
             @ApiResponse(code = 429, message = "Too Many Requests", response = Void.class),
             @ApiResponse(code = 500, message = "Internal Server Error", response = Void.class) })
 
-    @RequestMapping(value = "/aspsp/{aspspId}",
+    @RequestMapping(value = "/aspsp",
             method = RequestMethod.DELETE)
     ResponseEntity<AspspConfiguration> unregisterToAspsp(
-            @ApiParam(value = "The ASPSP ID", required = true)
-            @PathVariable("aspspId") String aspspId
+            @ApiParam(value = "The ASPSP-AS OIDC root endpoint", required = true)
+            @RequestHeader("as_discovery_endpoint") String oidcRootEndpoint
     );
 
     @RequestMapping(value = "/aspsp",

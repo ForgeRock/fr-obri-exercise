@@ -17,10 +17,6 @@
 
 Code sample for helping TPPs and ASPSP using the ForgeRock Open Banking reference implementation platform.
 
-## Licence
-License:	CDDLv1.0 \
-License URL	: http://forgerock.org/cddlv1-0/
-
 
 ## How to install the app
 
@@ -39,3 +35,7 @@ To follow and complete the exercise go to https://qcastel.github.io/
 
 https://qcastel.github.io/ is the hosted docs from [docs](forgerock-openbanking-excercise-tpp/src/docs)
 
+
+## Licence
+License:	CDDLv1.0 \
+License URL	: http://forgerock.org/cddlv1-0/

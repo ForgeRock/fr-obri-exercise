@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import uk.org.openbanking.datamodel.account.OBReadAccount2;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -16,13 +17,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 public class AccountsApiTest extends PostAISPAccessTokenTest {
 
-    @Ignore("not ready yet")
     @Test
     public void getAccounts() throws Exception {
         String obPaymentSubmissionResponseSerialised = this.mockMvcForDocs.perform(
-                post("/api/open-banking/accounts/")
+                get("/api/open-banking/accounts/")
                         .param("aspspId", aspspConfigId)
-                        .param("accessToken", accessToken)
+                        .header("accessToken", accessToken)
         )
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();

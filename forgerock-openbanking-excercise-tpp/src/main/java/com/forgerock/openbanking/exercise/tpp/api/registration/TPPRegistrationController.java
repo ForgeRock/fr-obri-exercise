@@ -130,17 +130,18 @@ public class TPPRegistrationController implements TPPRegistration {
 
     @Override
     public ResponseEntity unregisterToAspsp(
-            @ApiParam(value = "The ASPSP ID", required = true)
-            @PathVariable("aspspId") String aspspId
+            @ApiParam(value = "The ASPSP-AS OIDC root endpoint", required = true)
+            @RequestHeader("as_discovery_endpoint") String oidcRootEndpoint
     ){
-        Optional<AspspConfiguration> optionalAspspConfiguration = aspspConfigurationRepository.findById(aspspId);
-        if (!optionalAspspConfiguration.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ASPSP '" + aspspId + "' wasn't registered.");
-        }
+        OIDCDiscoveryResponse oidcDiscoveryResponse = asDiscoveryService.discovery(oidcRootEndpoint);
+        String registrationEndpoint = oidcDiscoveryResponse.getRegistrationEndpoint();
+        LOGGER.debug("The OIDC aspsp endpoint: {}", oidcRootEndpoint);
 
-        aspspAsRegistrationService.unregister(optionalAspspConfiguration.get().getRegistrationEndpoint());
-        aspspConfigurationRepository.delete(optionalAspspConfiguration.get());
-        return ResponseEntity.ok("ASPSP '" + aspspId + "'  unregistered successfully");
+        OIDCRegistrationResponse oidcRegistrationResponse = aspspAsRegistrationService.getRegistration(registrationEndpoint);
+
+        aspspAsRegistrationService.unregister(registrationEndpoint);
+        aspspConfigurationRepository.deleteById(oidcRegistrationResponse.getClientId());
+        return ResponseEntity.ok("ASPSP '" + oidcRegistrationResponse.getClientId() + "'  unregistered successfully");
     }
 
     @Override
@@ -197,7 +198,7 @@ public class TPPRegistrationController implements TPPRegistration {
         aspspConfiguration.setRegistrationEndpoint(registrationEndpoint);
         aspspConfiguration.setDiscoveryAPILinksPayment(paymentInitiationAPI.get().getLinks());
         aspspConfiguration.setDiscoveryAPILinksAccount(accountAndTransactionAPI.get().getLinks());
-
+        aspspConfiguration.setId(oidcRegistrationResponse.getClientId());
         aspspConfiguration = aspspConfigurationRepository.save(aspspConfiguration);
 
         return ResponseEntity.ok(new RegistrationResponse(aspspConfiguration.getId()));

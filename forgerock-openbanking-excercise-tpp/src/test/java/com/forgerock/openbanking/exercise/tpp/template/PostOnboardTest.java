@@ -19,13 +19,18 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.util.NestedServletException;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -64,6 +69,7 @@ public abstract class PostOnboardTest {
                 .alwaysDo(document("{ClassName}/{method-name}/{step}",
                         preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
                 .build();
+        unregisterAspsp();
         this.aspspConfigId = onboard(mockMvcForSettingUpTest);
         this.tppConfiguration.getRedirectUris().setAisp("https://localhost");
         this.tppConfiguration.getRedirectUris().setPisp("https://localhost");
@@ -73,12 +79,17 @@ public abstract class PostOnboardTest {
 
     @After
     public void unsetup() throws Exception {
-        mockMvcForSettingUpTest.perform(delete("/api/registration/aspsp/{aspspId}", aspspConfigId));
+        unregisterAspsp();
         config.getDriver().close();
     }
 
+    private void unregisterAspsp() throws Exception {
+        mockMvcForSettingUpTest.perform(delete("/api/registration/aspsp")
+                .header("as_discovery_endpoint", tppConfiguration.getAspsp().getAsDiscoveryEndpoint()));
+    }
+
     public String onboard(MockMvc mockMvc) throws Exception {
-        MvcResult result =  mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 post("/api/registration/aspsp")
                         .header("financial_id", tppConfiguration.getAspsp().getFinancialId())
                         .header("as_discovery_endpoint", tppConfiguration.getAspsp().getAsDiscoveryEndpoint())

@@ -32,10 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import uk.org.openbanking.OBHeaders;
-import uk.org.openbanking.datamodel.account.OBExternalPermissions1Code;
-import uk.org.openbanking.datamodel.account.OBReadData1;
-import uk.org.openbanking.datamodel.account.OBReadRequest1;
-import uk.org.openbanking.datamodel.account.OBReadResponse1;
+import uk.org.openbanking.datamodel.account.*;
 
 import javax.annotation.Resource;
 import java.util.UUID;
@@ -119,9 +116,9 @@ public class RSAccountAPIService {
      * @return the PSU accounts
      * @throws Exception
      */
-    public OBReadResponse1 readAccounts(AspspConfiguration aspspConfiguration, String accessToken)
+    public OBReadAccount2 readAccounts(AspspConfiguration aspspConfiguration, String accessToken)
             throws Exception {
-        //TODO exercise: Use the postman and the createAccountRequest() to implement a similar function, that does retrieve the user accounts from the RS-ASPSP
+        // TODO exercise: Use postman and the method createAccountRequest() to implement a similar function, that retrieves the user accounts from the RS-ASPSP
         return null;
     }
 }
