@@ -75,7 +75,7 @@ include::{snippets}/on-boarding/curl-request.adoc[]
 
 You should receive the on-boarding result.
 
-Note: In the response is the aspspId. You should substitute this into any aspspId variable in the examples below
+NOTE: In the response is the aspspId. You should substitute this into any aspspId variable in the examples below
 
 include::{snippets}/on-boarding/http-response.adoc[]
 
