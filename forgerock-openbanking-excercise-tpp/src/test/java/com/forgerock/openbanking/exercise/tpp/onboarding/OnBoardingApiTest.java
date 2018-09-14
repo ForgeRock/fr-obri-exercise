@@ -52,7 +52,7 @@ public class OnBoardingApiTest {
                 .apply(documentationConfiguration(this.restDocumentation)
                          .uris()
                                 .withScheme("https")
-                                .withHost("tpp.example.com")
+                                .withHost("localhost")
                                 .withPort(8080)
                                 .and().snippets()
                                 .withDefaults(CliDocumentation.curlRequest(),
@@ -65,7 +65,7 @@ public class OnBoardingApiTest {
                 .apply(MockMvcRestDocumentation.documentationConfiguration(restDocumentation)
                         .uris()
                         .withScheme("https")
-                        .withHost("tpp.example.com")
+                        .withHost("localhost")
                         .withPort(7777)
                         .and().snippets()
                         .withDefaults(CliDocumentation.curlRequest(),

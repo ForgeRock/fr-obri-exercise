@@ -53,7 +53,7 @@ public abstract class PostOnboardTest {
                 .apply(documentationConfiguration(this.restDocumentation)
                         .uris()
                         .withScheme("https")
-                        .withHost("tpp.example.com")
+                        .withHost("localhost")
                         .withPort(8080)
                         .and().snippets()
                         .withDefaults(CliDocumentation.curlRequest(),

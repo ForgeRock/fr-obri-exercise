@@ -25,22 +25,13 @@ License URL	: http://forgerock.org/cddlv1-0/
 ## How to install the app
 
 
-### Downloading the project code and loading it with intellij
+### Setting up the project
 
 You need to get the code locally for the git project repo. For this, you need to
 
 - Fork the project
 - Clone your fork (if it's your first development with GIT, we recommend putting all the git repo in ~/Development/GIT)
-- Download the latest intellij version (ultimate)
-- Open the project with intellij (you will need to open it as an existing maven project)
-
-### Setup the host files
-
-You will need to create some new hostnames for the application.
-
-```$xslt
-127.0.0.1		tpp.example.com
-```
+- Open the project in your IDE
 
 ### Setup the google chrome driver
 
@@ -49,8 +40,9 @@ This would need to be installed in your OS system first.
 Follow the instruction here:
 https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver
 
-## Docs of the app
+## Try it out!
 
-The app generated its own doc when you compile, in the folder target/generated-docs.
-For conveniency, we also host it under https://qcastel.github.io/
+To follow and complete the exercise go to https://qcastel.github.io/
+
+https://qcastel.github.io/ is the hosted docs from [docs](forgerock-openbanking-excercise-tpp/src/docs)
 
