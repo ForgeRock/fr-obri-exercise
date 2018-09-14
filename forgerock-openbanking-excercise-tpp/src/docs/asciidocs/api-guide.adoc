@@ -12,7 +12,7 @@ It will show you the basic Open Banking flow:
 
 This sample is based on the ForgeRock OBRI but can easily be integrated with other ASPSPs.
 
-We build this app to show you what looks like a base for a TPP application but also give you a taste on what is Open Banking.
+We built this app to show you what looks like a base for a TPP application but also give you a taste on what is Open Banking.
 For some of you that are new in Open Banking, it's probably the best way to setup your mind and see if it's something you would like to get more involved in.
 
 == Glossary
