@@ -31,30 +31,28 @@ The TPP app will need to consume REST APIs protected by MATLS. What this means i
 with the external service needs to provide what we call a client certificate. It's like an HTTP certificate
 except that it is used for authenticating the client app, for us, the TPP app.
 
-To get this client certificate setup, you need:
+To get this client certificate setup, you need to:
 
-* register on the ForgeRock directory https://directory.ob.forgerock.financial
-* login to the directory
-* create a software statement
-* name your software statement
-* as you are here, set the redirect uris to :
+. Register on the ForgeRock directory https://directory.ob.forgerock.financial
+. Login to the directory
+. Create a software statement
+. Name your software statement
+. Set the redirect uris to :
 ** https://localhost
 ** https://localhost:8080/web/exchange_code/aisp
 ** https://localhost:8080/web/exchange_code/pisp
-* go to the keys tab and download the latest transport key in .pem and .key formats
-* save then in the folder keys/ and rename the corresponding files by:
-** transport.pem
-** transport.key
-* run the bash script `importDirectoryKey.sh` which will load those keys into the java keystore of the app
+. Go to the `Transport/Signing/Encryption keys` tab and scroll to the bottom
+. Download the transport keys in .pem and .key formats by going to the `Actions` column
+. Save them in the top level of the project folder
+. Run the bash script `importDirectoryKey.sh` which will load those keys into the java keystore of the app
 
 You are now ready to run the application!
 
 == Compiling the app
 
-Run the usual `mvn clean install`
+Run `mvn clean install`
+
 You will see that it runs the functional tests. Feel free to explore them!
-Bear in mind that the functional tests expect your software statement to not been on-board yet. Make sure that's the case.
-By default, if you just created the software statement, it would be the case
 
 NOTE: The functional tests uses Selenium, to simulate the PSU interaction.
 
