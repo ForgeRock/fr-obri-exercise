@@ -33,13 +33,6 @@ You need to get the code locally for the git project repo. For this, you need to
 - Clone your fork (if it's your first development with GIT, we recommend putting all the git repo in ~/Development/GIT)
 - Open the project in your IDE
 
-### Setup the google chrome driver
-
-Our functional tests use Selenium, which requires a google chrome driver to run.
-This would need to be installed in your OS system first.
-Follow the instruction here:
-https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver
-
 ## Try it out!
 
 To follow and complete the exercise go to https://qcastel.github.io/
