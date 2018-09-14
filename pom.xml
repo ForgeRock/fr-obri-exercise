@@ -47,7 +47,7 @@
 
         <spring-cloud.version>Finchley.SR1</spring-cloud.version>
 
-        <ob.sdk.version>2.0.0.2</ob.sdk.version>
+        <ob.sdk.version>2.0.0.6</ob.sdk.version>
 
         <jodatime.version>2.9.9</jodatime.version>
         <apache.version>4.5.3</apache.version>
@@ -231,6 +231,14 @@
                 <enabled>true</enabled>
                 <checksumPolicy>fail</checksumPolicy>
             </releases>
+        </repository>
+        <repository>
+            <id>bintray-forgerock-ORBI</id>
+            <name>bintray</name>
+            <url>https://forgerock.bintray.com/ORBI</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
