@@ -33,7 +33,7 @@ except that it is used for authenticating the client app, for us, the TPP app.
 
 To get this client certificate setup, you need:
 
-* register on the ForgeRock directory https://directory.integ-ob.forgerock.financial
+* register on the ForgeRock directory https://directory.ob.forgerock.financial
 * login to the directory
 * create a software statement
 * name your software statement
