@@ -15,7 +15,7 @@ public class AccountsAPIController implements AccountsAPI {
     private RSAccountAPIService rsAccountAPIService;
 
     @Override
-    public ResponseEntity<String> readAccounts(
+    public ResponseEntity readAccounts(
             @RequestParam(value = "aspspId") String aspspId,
             @RequestHeader(value = "accessToken") String accessToken) {
         //TODO: exercise: retrieve the aspsp configuration
