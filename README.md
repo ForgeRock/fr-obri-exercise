@@ -25,14 +25,13 @@ License URL	: http://forgerock.org/cddlv1-0/
 ## How to install the app
 
 
-### Downloading the project code and loading it with intellij
+### Setting up the project
 
 You need to get the code locally for the git project repo. For this, you need to
 
 - Fork the project
 - Clone your fork (if it's your first development with GIT, we recommend putting all the git repo in ~/Development/GIT)
-- Download the latest intellij version (ultimate)
-- Open the project with intellij (you will need to open it as an existing maven project)
+- Open the project in your IDE
 
 ### Setup the google chrome driver
 
