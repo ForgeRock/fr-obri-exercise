@@ -34,8 +34,6 @@ You need to get the code locally for the git project repo. For this, you need to
 - Download the latest intellij version (ultimate)
 - Open the project with intellij (you will need to open it as an existing maven project)
 
-Note. You'll need to unregister your TPP to run the tests if it's already registered.
-
 ### Setup the google chrome driver
 
 Our functional tests use Selenium, which requires a google chrome driver to run.
@@ -43,7 +41,7 @@ This would need to be installed in your OS system first.
 Follow the instruction here:
 https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver
 
-## Docs of the app
+## Try it out!
 
 To follow and complete the exercise go to https://qcastel.github.io/
 
