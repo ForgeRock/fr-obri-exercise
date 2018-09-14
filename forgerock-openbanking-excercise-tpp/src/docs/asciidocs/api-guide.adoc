@@ -12,6 +12,9 @@ It will show you the basic Open Banking flow:
 
 This sample is based on the ForgeRock OBRI but can easily be integrated with other ASPSPs.
 
+We build this app to show you what looks like a base for a TPP application but also give you a taste on what is Open Banking.
+For some of you that are new in Open Banking, it's probably the best way to setup your mind and see if it's something you would like to get more involved in.
+
 == Glossary
 
 The Open Banking glossary can be found here:
@@ -107,12 +110,18 @@ Feel free to add it to your postman and play with it
 
 == Little exercise
 
-This app is yelling for contribution! We prepared one exercise, which should introduce you nicely to this project.
 The goal is to retrieve the PSU financial accounts and return them as json.
-You will find a few 'TODO' that will indicate you where we expect the implementation to be done.
-Submit a PR when you think you are ready and we will integrate your contribution into this sample app.
-We build this app to show you what looks like a base for a TPP application but also give you a taste on what is Open Banking.
-For some of you that are new in Open Banking, it's probably the best way to setup your mind and see if it's something you would like to get more involved in.
+
+There is a test for getting accounts that is highlighting missing functionality. Your aim is to implement the missing logic.
+
+. Go to https://github.com/ForgeRock/fr-obri-exercise/blob/master/forgerock-openbanking-excercise-tpp/src/test/java/com/forgerock/openbanking/exercise/tpp/account/AccountsApiTest.java#L21[AccountsApiTest.java] in your IDE.
+. Remove the `@Ignored`
+. Run the test and it should fail
+. Go to https://github.com/ForgeRock/fr-obri-exercise/blob/master/forgerock-openbanking-excercise-tpp/src/main/java/com/forgerock/openbanking/exercise/tpp/api/account/AccountsAPIController.java#L21[AccountsAPIController.java]
+. Implement the logic to get accounts.
+. Run the test and check it passes
+
+If you get stuck or complete it raise a PR and we'll give you some feedback!
 
 == Youtube channel
 
