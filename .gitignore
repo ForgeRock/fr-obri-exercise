@@ -1,3 +1,5 @@
 *.key
 *.pem
 keystore.p12
+.idea/*
+*.iml
