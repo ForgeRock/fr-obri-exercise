@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import uk.org.openbanking.datamodel.account.OBReadAccount2;
+import static org.apache.http.HttpStatus.*;
 
 @Api(value = "accounts", description = "Accounts API")
 @RequestMapping("/api/open-banking/accounts/")
@@ -32,8 +33,11 @@ public interface AccountsAPI {
             notes = "Read the PSU financial accounts, using the approved consent via an access token resulting from the hybrid flow",
             response = ResponseEntity.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "List of accounts",
-                    response = OBReadAccount2.class)})
+            @ApiResponse(code = SC_OK, message = "List of accounts",
+                    response = OBReadAccount2.class),
+            @ApiResponse(code = SC_NOT_FOUND, message = "The supplied aspspId was invalid"),
+            @ApiResponse(code = SC_FORBIDDEN, message = "The supplied access token was invalid"),
+    })
     @RequestMapping(value = "", method = RequestMethod.GET)
     ResponseEntity<String> readAccounts(
             @ApiParam(value = "The ASPSP ID", required = true)

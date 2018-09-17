@@ -25,9 +25,7 @@ import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -59,6 +57,7 @@ public class RSAccountAPIService {
     public OBReadResponse1 createAccountRequest(AspspConfiguration aspspConfiguration, AccessTokenResponse accessTokenResponse)
             throws Exception {
         LOGGER.debug("Create an account request");
+
         OBReadData1 dataSetup = new OBReadData1()
                 .addPermissionsItem(OBExternalPermissions1Code.READACCOUNTSDETAIL)
                 .addPermissionsItem(OBExternalPermissions1Code.READBALANCES)
@@ -77,18 +76,7 @@ public class RSAccountAPIService {
                 .data(dataSetup);
 
         String uid = UUID.randomUUID().toString();
-        //Set headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add(OBHeaders.AUTHORIZATION, "Bearer " + accessTokenResponse.access_token);
-        //It's optional and can probably be replaced by a JWS content instead.
-        //headers.add(OBHeaders.X_JWS_SIGNATURE, "");
-        headers.add(OBHeaders.X_FAPI_FINANCIAL_ID, aspspConfiguration.getFinancialId());
-        //We don't have the user last logged time
-        //headers.add(OBHeaders.X_FAPI_CUSTOMER_LAST_LOGGED_TIME, "");
-        headers.add(OBHeaders.X_FAPI_CUSTOMER_IP_ADDRESS, "");
-        headers.add(OBHeaders.X_FAPI_INTERACTION_ID, uid);
-        headers.add(OBHeaders.ACCEPT, "application/json");
+        HttpHeaders headers = createHttpHeaders(aspspConfiguration, accessTokenResponse.access_token, uid);
 
         //Send request
         HttpEntity<OBReadRequest1> request = new HttpEntity<>(accountRequest, headers);
@@ -116,9 +104,38 @@ public class RSAccountAPIService {
      * @return the PSU accounts
      * @throws Exception
      */
-    public OBReadAccount2 readAccounts(AspspConfiguration aspspConfiguration, String accessToken)
-            throws Exception {
-        // TODO exercise: Use postman and the method createAccountRequest() to implement a similar function, that retrieves the user accounts from the RS-ASPSP
-        return null;
+    public OBReadAccount2 readAccounts(AspspConfiguration aspspConfiguration, String accessToken) {
+
+        String interactionId = UUID.randomUUID().toString();
+
+        HttpHeaders headers = createHttpHeaders(aspspConfiguration, accessToken, interactionId);
+
+        HttpEntity requestEntity = new HttpEntity<>(headers);
+
+        String getAccountsUrl = aspspConfiguration.getDiscoveryAPILinksAccount().getGetAccounts();
+
+        ResponseEntity<OBReadAccount2> exchange = restTemplate.exchange(
+                getAccountsUrl,
+                HttpMethod.GET,
+                requestEntity,
+                OBReadAccount2.class);
+
+        return exchange.getBody();
+    }
+
+    private HttpHeaders createHttpHeaders(AspspConfiguration aspspConfiguration, String accessToken, String interactionId) {
+        //Set headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add(OBHeaders.AUTHORIZATION, "Bearer " + accessToken);
+        //It's optional and can probably be replaced by a JWS content instead.
+        //headers.add(OBHeaders.X_JWS_SIGNATURE, "");
+        headers.add(OBHeaders.X_FAPI_FINANCIAL_ID, aspspConfiguration.getFinancialId());
+        //We don't have the user last logged time
+        //headers.add(OBHeaders.X_FAPI_CUSTOMER_LAST_LOGGED_TIME, "");
+        headers.add(OBHeaders.X_FAPI_CUSTOMER_IP_ADDRESS, "");
+        headers.add(OBHeaders.X_FAPI_INTERACTION_ID, interactionId);
+        headers.add(OBHeaders.ACCEPT, "application/json");
+        return headers;
     }
 }
