@@ -51,8 +51,6 @@ public class OnBoardingApiTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context)
                 .apply(documentationConfiguration(this.restDocumentation)
                          .uris()
-                                .withScheme("https")
-                                .withHost("localhost")
                                 .withPort(8080)
                                 .and().snippets()
                                 .withDefaults(CliDocumentation.curlRequest(),
@@ -64,8 +62,6 @@ public class OnBoardingApiTest {
                         preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())))
                 .apply(MockMvcRestDocumentation.documentationConfiguration(restDocumentation)
                         .uris()
-                        .withScheme("https")
-                        .withHost("localhost")
                         .withPort(8080)
                         .and().snippets()
                         .withDefaults(CliDocumentation.curlRequest(),

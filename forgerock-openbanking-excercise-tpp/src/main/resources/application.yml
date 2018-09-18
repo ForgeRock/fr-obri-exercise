@@ -35,7 +35,7 @@ logging:
 server:
     port: 8080
     ssl:
-        enabled: true
+        enabled: false
         key-alias: transport
         key-password: changeit
         key-store: classpath:keystore/keystore.p12
@@ -44,10 +44,10 @@ server:
 tpp:
   obri:
     domain: ob.forgerock.financial
-  root: https://${spring.hostname}:${server.port}/open-banking/v1.1
+  root: http://${spring.hostname}:${server.port}/open-banking/v1.1
   redirect-uris:
-    aisp: https://${spring.hostname}:${server.port}/web/exchange_code/aisp   #<-- replace this by the redirect uri you have setup in your SSA
-    pisp: https://${spring.hostname}:${server.port}/web/exchange_code/pisp  #<-- replace this by the redirect uri you have setup in your SSA
+    aisp: http://${spring.hostname}:${server.port}/web/exchange_code/aisp   #<-- replace this by the redirect uri you have setup in your SSA
+    pisp: http://${spring.hostname}:${server.port}/web/exchange_code/pisp  #<-- replace this by the redirect uri you have setup in your SSA
   openbanking:
     version: v2.0
   jwkms: https://jwkms.${tpp.obri.domain}

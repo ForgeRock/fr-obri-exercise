@@ -38,9 +38,9 @@ To get this client certificate setup, you need to:
 . Create a software statement
 . Name your software statement
 . Set the redirect uris to :
-** https://localhost
-** https://localhost:8080/web/exchange_code/aisp
-** https://localhost:8080/web/exchange_code/pisp
+** http://localhost
+** http://localhost:8080/web/exchange_code/aisp
+** http://localhost:8080/web/exchange_code/pisp
 . Go to the `Transport/Signing/Encryption keys` tab and scroll to the bottom
 . Download the transport keys in .pem and .key formats by going to the `Actions` column
 . Save them in the top level of the project folder
