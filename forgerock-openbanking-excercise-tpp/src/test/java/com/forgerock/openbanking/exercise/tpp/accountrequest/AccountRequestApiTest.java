@@ -1,5 +1,6 @@
 package com.forgerock.openbanking.exercise.tpp.accountrequest;
 
+import com.forgerock.openbanking.exercise.tpp.URIFragment;
 import com.forgerock.openbanking.exercise.tpp.template.PostOnboardTest;
 import com.forgerock.openbanking.exercise.tpp.ui.view.AMLoginView;
 import com.forgerock.openbanking.exercise.tpp.ui.view.RCSAccountsConsentView;
@@ -41,7 +42,7 @@ public class AccountRequestApiTest extends PostOnboardTest {
         accountsConsentView.allow();
 
         //Simulate the javascript redirect, as we are limited by what we can simulate
-        MultiValueMap<String, String> queryMap = getQueryMap(new URI(config.getDriver().getCurrentUrl()).getFragment());
+        MultiValueMap<String, String> queryMap = getQueryMap(URIFragment.get(config));
         String accessToken = this.mockMvcForDocs.perform(
                 get("/api/open-banking/account-requests/exchange_code")
                         .params(queryMap)

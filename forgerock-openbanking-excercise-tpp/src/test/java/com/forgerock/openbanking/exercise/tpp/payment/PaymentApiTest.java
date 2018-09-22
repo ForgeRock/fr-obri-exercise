@@ -1,5 +1,6 @@
 package com.forgerock.openbanking.exercise.tpp.payment;
 
+import com.forgerock.openbanking.exercise.tpp.URIFragment;
 import com.forgerock.openbanking.exercise.tpp.template.PostOnboardTest;
 import com.forgerock.openbanking.exercise.tpp.ui.view.AMLoginView;
 import com.forgerock.openbanking.exercise.tpp.ui.view.RCSPaymentConsentView;
@@ -11,8 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.MultiValueMap;
 import uk.org.openbanking.datamodel.payment.OBTransactionIndividualStatus1Code;
 import uk.org.openbanking.datamodel.payment.paymentsubmission.OBPaymentSubmissionResponse1;
-
-import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -40,11 +39,11 @@ public class PaymentApiTest extends PostOnboardTest {
 
         //Accept payment
         RCSPaymentConsentView paymentConsentView = new RCSPaymentConsentView(config);
+        paymentConsentView.select(0);
         paymentConsentView.allow();
-        paymentConsentView.submit(0);
 
         //Simulate the javascript redirect, as we are limited by what we can simulate
-        MultiValueMap<String, String> queryMap = getQueryMap(new URI(config.getDriver().getCurrentUrl()).getFragment());
+        MultiValueMap<String, String> queryMap = getQueryMap(URIFragment.get(config));
         String obPaymentSubmissionResponseSerialised = this.mockMvcForDocs.perform(
                 get("/api/open-banking/payment-requests/exchange_code")
                         .params(queryMap)
