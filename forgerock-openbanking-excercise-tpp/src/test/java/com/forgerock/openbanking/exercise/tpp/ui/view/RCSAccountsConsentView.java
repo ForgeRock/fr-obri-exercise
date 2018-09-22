@@ -12,11 +12,7 @@ public class RCSAccountsConsentView {
     }
 
     public void allow() {
-        config.getDriver().findElement(By.className("allow-answer")).click();
-    }
-
-    public void submit() {
-        config.getDriver().findElements(By.className("btn-primary")).get(0).click();
+        config.getDriver().findElement(By.xpath("//*[contains(text(), 'Allow')]")).click();
     }
 
 }

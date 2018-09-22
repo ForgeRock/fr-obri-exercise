@@ -39,7 +39,6 @@ public class AccountRequestApiTest extends PostOnboardTest {
         //Accept account sharing consent
         RCSAccountsConsentView accountsConsentView = new RCSAccountsConsentView(config);
         accountsConsentView.allow();
-        accountsConsentView.submit();
 
         //Simulate the javascript redirect, as we are limited by what we can simulate
         MultiValueMap<String, String> queryMap = getQueryMap(new URI(config.getDriver().getCurrentUrl()).getFragment());

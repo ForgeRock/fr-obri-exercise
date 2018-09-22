@@ -15,7 +15,7 @@ public class RCSPaymentConsentView {
     }
 
     public void allow() {
-        config.getDriver().findElement(By.className("allow-answer")).click();
+        config.getDriver().findElement(By.xpath("//*[contains(text(), 'Allow')]")).click();
     }
 
     public void submit(int accountIndex) {
