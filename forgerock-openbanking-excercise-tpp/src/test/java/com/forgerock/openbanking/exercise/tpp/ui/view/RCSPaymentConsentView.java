@@ -18,8 +18,8 @@ public class RCSPaymentConsentView {
         config.getDriver().findElement(By.xpath("//*[contains(text(), 'Allow')]")).click();
     }
 
-    public void submit(int accountIndex) {
-        List<WebElement> li = config.getDriver().findElements(By.name("accountId"));
+    public void select(int accountIndex) {
+        List<WebElement> li = config.getDriver().findElements(By.tagName("mat-radio-button"));
         li.get(accountIndex).click();
     }
 
