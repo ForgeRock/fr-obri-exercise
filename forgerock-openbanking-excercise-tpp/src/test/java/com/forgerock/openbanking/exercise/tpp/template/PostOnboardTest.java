@@ -57,8 +57,6 @@ public abstract class PostOnboardTest {
         this.mockMvcForDocs = MockMvcBuilders.webAppContextSetup(this.context)
                 .apply(documentationConfiguration(this.restDocumentation)
                         .uris()
-                        .withScheme("https")
-                        .withHost("localhost")
                         .withPort(8080)
                         .and().snippets()
                         .withDefaults(CliDocumentation.curlRequest(),
@@ -71,8 +69,8 @@ public abstract class PostOnboardTest {
                 .build();
         unregisterAspsp();
         this.aspspConfigId = onboard(mockMvcForSettingUpTest);
-        this.tppConfiguration.getRedirectUris().setAisp("https://localhost");
-        this.tppConfiguration.getRedirectUris().setPisp("https://localhost");
+        this.tppConfiguration.getRedirectUris().setAisp("http://localhost");
+        this.tppConfiguration.getRedirectUris().setPisp("http://localhost");
         this.config = new SeleniumConfig();
     }
 
